@@ -70,13 +70,12 @@
             align-items: center;
             justify-content: flex-start;
             width: 100%;
-            max-height: 75vh;           /* 限制高度，内容超出可滚动 */
+            max-height: 75vh;
             overflow-y: auto;
-            padding: 0 4px 20px 4px;    /* 底部留白，滚动到底部能看到图片下边距 */
+            padding: 0 4px 20px 4px;
             scroll-behavior: smooth;
         }
 
-        /* 自定义滚动条，更明显 */
         #articlePage::-webkit-scrollbar {
             width: 6px;
         }
@@ -264,11 +263,10 @@
             margin-bottom: 1em;
         }
 
-        /* ===== 文章底部图片 ===== */
         .article-image {
             width: 100%;
             max-width: 500px;
-            margin: 0 auto 30px auto;      /* 底部留空，滚动时能看到完整图片 */
+            margin: 0 auto 30px auto;
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
@@ -280,7 +278,7 @@
         .article-image img {
             display: block;
             width: 100%;
-            height: auto;                /* 保持比例，不会变形 */
+            height: auto;
             vertical-align: middle;
         }
 
@@ -346,7 +344,7 @@
                 font-size: 1rem;
             }
             #articlePage {
-                max-height: 70vh;        /* 手机屏稍小，留出更多空间 */
+                max-height: 70vh;
             }
         }
     </style>
@@ -369,7 +367,8 @@
             <h1>Duludulu IDE</h1>
             <p class="subtitle">轻量级开发环境，点击下方按钮下载</p>
             <div class="btn-group">
-                <a href="https://223-109-125-233-v3.pd1.cjjd19.com/user-share-free-download-cdn.123295.com/123-96/96a6700a/4001552516-0/96a6700a2e0a34f61c39a3f7cc230060/c-m42?v=5&t=1787461324&r=FC4V9Y&bzc=2&bzs=343030313535323531363a33363637393532303a3839323139323534393a343030313535323531363a32&ur=vvaguigvpvgv&urn=0&s=1787461324f676168a08b65c4211f8a0eb281fc8f6&bzp=0&bi=2002136990&filename=Duludulu+IDE.7z&x-mf-biz-cid=d8a2fbef-d829-45fd-a256-173c75c6085b-cb8c2b&auto_redirect=0&ndcp=1&cache_type=1" class="download-btn" target="_blank"><i class="fas fa-download"></i> 下载 (Duludulu IDE.7z)</a>
+                <!-- 下载链接已更新为新地址 -->
+                <a href="https://223-109-125-231-v3.pd1.cjjd19.com/user-share-free-download-cdn.123295.com/123-96/96a6700a/4001552516-0/96a6700a2e0a34f61c39a3f7cc230060/c-m9018?v=5&t=1788784502&r=RP9K15&bzc=2&bzs=343030313535323531363a33363931393536393a3839323139323534393a343030313535323531363a32&ur=vvagevgvpgvue&urn=0&s=178878450299f0849d88043f9fc1e87ba0a6ac9cfb&bzp=0&bi=3690598689&filename=Duludulu+IDE.7z&x-mf-biz-cid=1cc1fff2-b642-40b1-85cb-155591daa93b-3dab77&auto_redirect=0&ndcp=1&cache_type=1" class="download-btn" target="_blank"><i class="fas fa-download"></i> 下载 (Duludulu IDE.7z)</a>
                 <button class="article-btn" id="showArticleBtn"><i class="fas fa-newspaper"></i> 文章</button>
             </div>
             <div class="footer">©2026 Duludulu AI · 小船党工作室</div>
@@ -395,7 +394,6 @@
 
     <script>
         (function() {
-            // 动态背景
             const bg = document.getElementById('bgAnim');
             const gradients = [
                 'linear-gradient(135deg,#e8e8e8 0%,#1a1a1a 100%)',
@@ -411,13 +409,11 @@
                 bg.style.background = gradients[idx];
             }, 8000);
 
-            // 页面切换
             const home = document.getElementById('homePage');
             const art = document.getElementById('articlePage');
             document.getElementById('showArticleBtn').addEventListener('click', () => {
                 home.style.display = 'none';
                 art.style.display = 'flex';
-                // 自动滚动到顶部，方便从头阅读
                 art.scrollTop = 0;
             });
             document.getElementById('backHomeBtn').addEventListener('click', () => {
