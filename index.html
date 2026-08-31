@@ -70,21 +70,26 @@
             align-items: center;
             justify-content: flex-start;
             width: 100%;
-            max-height: 80vh;
+            max-height: 75vh;           /* 限制高度，内容超出可滚动 */
             overflow-y: auto;
-            padding-right: 4px;
+            padding: 0 4px 20px 4px;    /* 底部留白，滚动到底部能看到图片下边距 */
+            scroll-behavior: smooth;
         }
 
-        /* 自定义滚动条 */
+        /* 自定义滚动条，更明显 */
         #articlePage::-webkit-scrollbar {
-            width: 4px;
+            width: 6px;
         }
         #articlePage::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
         }
         #articlePage::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 10px;
+        }
+        #articlePage::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
 
         .logo {
@@ -252,34 +257,30 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
             margin-bottom: 25px;
             padding: 0 10px;
+            flex-shrink: 0;
         }
 
         .article-text p {
             margin-bottom: 1em;
         }
 
-        /* ── 文章底部图片 ── */
+        /* ===== 文章底部图片 ===== */
         .article-image {
             width: 100%;
             max-width: 500px;
-            margin: 0 auto 25px auto;
+            margin: 0 auto 30px auto;      /* 底部留空，滚动时能看到完整图片 */
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
             background: rgba(0, 0, 0, 0.3);
-        }
-
-        .article-image:hover {
-            transform: scale(1.01);
-            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.08);
+            flex-shrink: 0;
         }
 
         .article-image img {
             display: block;
             width: 100%;
-            height: auto;
+            height: auto;                /* 保持比例，不会变形 */
             vertical-align: middle;
         }
 
@@ -297,6 +298,7 @@
             align-items: center;
             gap: 10px;
             flex-shrink: 0;
+            margin-top: 5px;
         }
 
         .back-btn:hover {
@@ -343,6 +345,9 @@
             .article-text {
                 font-size: 1rem;
             }
+            #articlePage {
+                max-height: 70vh;        /* 手机屏稍小，留出更多空间 */
+            }
         }
     </style>
 </head>
@@ -350,7 +355,7 @@
     <div class="background-animation" id="bgAnim"></div>
     <div class="container">
 
-        <!-- ===== 主页 ===== -->
+        <!-- 主页 -->
         <div id="homePage">
             <div class="logo">
                 <div class="logo-inner">
@@ -370,7 +375,7 @@
             <div class="footer">©2026 Duludulu AI · 小船党工作室</div>
         </div>
 
-        <!-- ===== 文章页面 ===== -->
+        <!-- 文章页面 -->
         <div id="articlePage">
             <div class="article-text">
                 <p>尊敬的用户，你好！</p>
@@ -378,7 +383,7 @@
                 <p>当然，我没什么资产，你可以点击下方的捐赠箱给我捐一点点钱（2块钱就可以了），也可以直接下载，我不强求，若是愿意捐赠，我再此万分感谢！🙏</p>
             </div>
 
-            <!-- ★ 文章底部图片：显示同目录下的 code.png -->
+            <!-- 图片区域：同目录下的 code.png，完整显示，可滚动查看 -->
             <div class="article-image">
                 <img src="code.png" alt="code.png" loading="lazy">
             </div>
@@ -412,7 +417,7 @@
             document.getElementById('showArticleBtn').addEventListener('click', () => {
                 home.style.display = 'none';
                 art.style.display = 'flex';
-                // 滚动到顶部
+                // 自动滚动到顶部，方便从头阅读
                 art.scrollTop = 0;
             });
             document.getElementById('backHomeBtn').addEventListener('click', () => {
