@@ -6,61 +6,388 @@
     <title>Duludulu IDE 下载</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI','Microsoft YaHei',sans-serif; }
-        body { background:#0a0a0a; color:#fff; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; margin:0; position:relative; overflow:hidden; }
-        .background-animation { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; background:linear-gradient(135deg,#e0e0e0 0%,#0a0a0a 100%); transition:background 3s ease-in-out; }
-        .container { max-width:600px; width:100%; background:rgba(20,20,20,0.7); border-radius:25px; box-shadow:0 20px 50px rgba(0,0,0,0.8); backdrop-filter:blur(12px); border:1px solid rgba(200,200,200,0.2); padding:50px 40px; text-align:center; position:relative; z-index:2; min-height:400px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-        #homePage { display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; }
-        #articlePage { display:none; flex-direction:column; align-items:center; justify-content:center; width:100%; }
-        .logo { width:140px; height:140px; background:linear-gradient(135deg,#333,#555); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 40px auto; box-shadow:0 10px 30px rgba(0,0,0,0.5); border:3px solid rgba(255,255,255,0.15); position:relative; overflow:hidden; }
-        .logo::before { content:''; position:absolute; width:200%; height:200%; background:conic-gradient(transparent,rgba(255,255,255,0.3),transparent 30%); animation:rotate 6s linear infinite; }
-        .logo-inner { width:130px; height:130px; background:linear-gradient(135deg,#222,#444); border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:2; }
-        .paper-boat { position:relative; width:80px; height:60px; transform:translateY(5px); }
-        .boat-body { position:absolute; bottom:0; left:0; width:100%; height:25px; background:white; clip-path:polygon(0% 0%,100% 0%,80% 100%,20% 100%); }
-        .boat-sail { position:absolute; top:-5px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:20px solid transparent; border-right:20px solid transparent; border-bottom:40px solid white; }
-        .boat-mast { position:absolute; top:0; left:50%; transform:translateX(-50%); width:3px; height:45px; background:white; }
-        @keyframes rotate { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
-        h1 { font-size:3rem; margin-bottom:20px; background:linear-gradient(to right,#fff,#e0e0e0,#d0d0d0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 5px 15px rgba(0,0,0,0.2); }
-        .subtitle { font-size:1.2rem; opacity:0.8; margin-bottom:30px; color:#eee; }
-        .btn-group { display:flex; flex-direction:column; gap:15px; width:100%; max-width:350px; }
-        .download-btn, .article-btn { display:inline-block; background:linear-gradient(to right,#333,#555); color:white; border:none; padding:16px 30px; border-radius:12px; font-size:1.3rem; font-weight:600; cursor:pointer; text-decoration:none; transition:all 0.3s ease; box-shadow:0 5px 15px rgba(0,0,0,0.4); display:inline-flex; align-items:center; justify-content:center; gap:15px; width:100%; }
-        .download-btn:hover, .article-btn:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(255,255,255,0.2); background:linear-gradient(to right,#444,#666); }
-        .download-btn i, .article-btn i { font-size:1.5rem; }
-        .article-btn { background:linear-gradient(to right,#4a4a4a,#6a6a6a); }
-        .article-btn:hover { background:linear-gradient(to right,#5a5a5a,#7a7a7a); }
-        .footer { margin-top:40px; font-size:0.9rem; opacity:0.6; color:#ccc; }
-        .article-text { font-size:1.1rem; line-height:1.8; text-align:left; width:100%; max-width:500px; color:#f0f0f0; text-shadow:0 0 10px rgba(255,255,255,0.1); margin-bottom:30px; padding:0 10px; }
-        .article-text p { margin-bottom:1em; }
-        .back-btn { background:linear-gradient(to right,#444,#666); padding:12px 35px; border-radius:12px; border:none; color:white; font-size:1.1rem; font-weight:600; cursor:pointer; transition:all 0.3s ease; display:inline-flex; align-items:center; gap:10px; }
-        .back-btn:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(255,255,255,0.2); background:linear-gradient(to right,#555,#777); }
-        @media (max-width:480px) { .container{padding:30px 20px;} h1{font-size:2.2rem;} .download-btn,.article-btn{font-size:1.1rem;padding:14px 20px;} .logo{width:110px;height:110px;} .logo-inner{width:100px;height:100px;} .paper-boat{width:60px;height:45px;} .boat-sail{border-left-width:15px;border-right-width:15px;border-bottom-width:30px;} .boat-mast{height:35px;} .boat-body{height:20px;} .article-text{font-size:1rem;} }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #e0e0e0 0%, #0a0a0a 100%);
+            transition: background 3s ease-in-out;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(200, 200, 200, 0.2);
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #homePage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        #articlePage {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        /* 自定义滚动条 */
+        #articlePage::-webkit-scrollbar {
+            width: 4px;
+        }
+        #articlePage::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #articlePage::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 10px;
+        }
+
+        .logo {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, #333, #555);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 40px auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(255, 255, 255, 0.3), transparent 30%);
+            animation: rotate 6s linear infinite;
+        }
+
+        .logo-inner {
+            width: 130px;
+            height: 130px;
+            background: linear-gradient(135deg, #222, #444);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .paper-boat {
+            position: relative;
+            width: 80px;
+            height: 60px;
+            transform: translateY(5px);
+        }
+
+        .boat-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 25px;
+            background: white;
+            clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 20% 100%);
+        }
+
+        .boat-sail {
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid white;
+        }
+
+        .boat-mast {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 45px;
+            background: white;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #e0e0e0, #d0d0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            color: #eee;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .download-btn,
+        .article-btn {
+            display: inline-block;
+            background: linear-gradient(to right, #333, #555);
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .download-btn:hover,
+        .article-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+            background: linear-gradient(to right, #444, #666);
+        }
+
+        .download-btn i,
+        .article-btn i {
+            font-size: 1.5rem;
+        }
+
+        .article-btn {
+            background: linear-gradient(to right, #4a4a4a, #6a6a6a);
+        }
+
+        .article-btn:hover {
+            background: linear-gradient(to right, #5a5a5a, #7a7a7a);
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            opacity: 0.6;
+            color: #ccc;
+        }
+
+        .article-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: left;
+            width: 100%;
+            max-width: 500px;
+            color: #f0f0f0;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        .article-text p {
+            margin-bottom: 1em;
+        }
+
+        /* ── 文章底部图片 ── */
+        .article-image {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 25px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .article-image:hover {
+            transform: scale(1.01);
+            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.08);
+        }
+
+        .article-image img {
+            display: block;
+            width: 100%;
+            height: auto;
+            vertical-align: middle;
+        }
+
+        .back-btn {
+            background: linear-gradient(to right, #444, #666);
+            padding: 12px 35px;
+            border-radius: 12px;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+            background: linear-gradient(to right, #555, #777);
+        }
+
+        @media (max-width:480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .download-btn,
+            .article-btn {
+                font-size: 1.1rem;
+                padding: 14px 20px;
+            }
+            .logo {
+                width: 110px;
+                height: 110px;
+            }
+            .logo-inner {
+                width: 100px;
+                height: 100px;
+            }
+            .paper-boat {
+                width: 60px;
+                height: 45px;
+            }
+            .boat-sail {
+                border-left-width: 15px;
+                border-right-width: 15px;
+                border-bottom-width: 30px;
+            }
+            .boat-mast {
+                height: 35px;
+            }
+            .boat-body {
+                height: 20px;
+            }
+            .article-text {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="background-animation" id="bgAnim"></div>
     <div class="container">
-        <!-- 主页 -->
+
+        <!-- ===== 主页 ===== -->
         <div id="homePage">
-            <div class="logo"><div class="logo-inner"><div class="paper-boat"><div class="boat-mast"></div><div class="boat-sail"></div><div class="boat-body"></div></div></div></div>
+            <div class="logo">
+                <div class="logo-inner">
+                    <div class="paper-boat">
+                        <div class="boat-mast"></div>
+                        <div class="boat-sail"></div>
+                        <div class="boat-body"></div>
+                    </div>
+                </div>
+            </div>
             <h1>Duludulu IDE</h1>
             <p class="subtitle">轻量级开发环境，点击下方按钮下载</p>
             <div class="btn-group">
-                <!-- 直链下载按钮 -->
                 <a href="https://223-109-125-233-v3.pd1.cjjd19.com/user-share-free-download-cdn.123295.com/123-96/96a6700a/4001552516-0/96a6700a2e0a34f61c39a3f7cc230060/c-m42?v=5&t=1787461324&r=FC4V9Y&bzc=2&bzs=343030313535323531363a33363637393532303a3839323139323534393a343030313535323531363a32&ur=vvaguigvpvgv&urn=0&s=1787461324f676168a08b65c4211f8a0eb281fc8f6&bzp=0&bi=2002136990&filename=Duludulu+IDE.7z&x-mf-biz-cid=d8a2fbef-d829-45fd-a256-173c75c6085b-cb8c2b&auto_redirect=0&ndcp=1&cache_type=1" class="download-btn" target="_blank"><i class="fas fa-download"></i> 下载 (Duludulu IDE.7z)</a>
                 <button class="article-btn" id="showArticleBtn"><i class="fas fa-newspaper"></i> 文章</button>
             </div>
             <div class="footer">©2026 Duludulu AI · 小船党工作室</div>
         </div>
-        <!-- 文章页面 -->
+
+        <!-- ===== 文章页面 ===== -->
         <div id="articlePage">
             <div class="article-text">
                 <p>尊敬的用户，你好！</p>
                 <p>我是小船党工作室开发人员，作为一位AI开发人员，我们在此要深刻感谢杭州Deepseek公司。本人不是什么厉害的技术人员，纯是业余爱好者，目前研究方向是gguf AI开发和系统研究，我的目标只有一个：买个大点的U盘，存的下AI模型源码。</p>
                 <p>当然，我没什么资产，你可以点击下方的捐赠箱给我捐一点点钱（2块钱就可以了），也可以直接下载，我不强求，若是愿意捐赠，我再此万分感谢！🙏</p>
             </div>
+
+            <!-- ★ 文章底部图片：显示同目录下的 code.png -->
+            <div class="article-image">
+                <img src="code.png" alt="code.png" loading="lazy">
+            </div>
+
             <button class="back-btn" id="backHomeBtn"><i class="fas fa-arrow-left"></i> 返回主页</button>
         </div>
+
     </div>
+
     <script>
         (function() {
             // 动态背景
@@ -72,20 +399,25 @@
                 'linear-gradient(135deg,#c8c8c8 0%,#050505 100%)',
                 'linear-gradient(135deg,#e0e0e0 0%,#0a0a0a 100%)'
             ];
-            let idx=0;
-            bg.style.background=gradients[0];
-            setInterval(()=>{ idx=(idx+1)%gradients.length; bg.style.background=gradients[idx]; },8000);
+            let idx = 0;
+            bg.style.background = gradients[0];
+            setInterval(() => {
+                idx = (idx + 1) % gradients.length;
+                bg.style.background = gradients[idx];
+            }, 8000);
 
             // 页面切换
             const home = document.getElementById('homePage');
             const art = document.getElementById('articlePage');
-            document.getElementById('showArticleBtn').addEventListener('click',()=>{
-                home.style.display='none';
-                art.style.display='flex';
+            document.getElementById('showArticleBtn').addEventListener('click', () => {
+                home.style.display = 'none';
+                art.style.display = 'flex';
+                // 滚动到顶部
+                art.scrollTop = 0;
             });
-            document.getElementById('backHomeBtn').addEventListener('click',()=>{
-                art.style.display='none';
-                home.style.display='flex';
+            document.getElementById('backHomeBtn').addEventListener('click', () => {
+                art.style.display = 'none';
+                home.style.display = 'flex';
             });
         })();
     </script>
