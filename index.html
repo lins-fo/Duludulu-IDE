@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duludulu IDE 下载</title>
+    <title>Duludulu IDE 下载 2.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -56,12 +56,45 @@
             justify-content: center;
         }
 
+        .language-selector-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        .language-selector {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(200, 200, 200, 0.3);
+            border-radius: 12px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .language-selector:hover {
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .language-selector:focus {
+            outline: none;
+        }
+
+        #homePage, #articlePage, #downloadPage {
+            width: 100%;
+        }
+
         #homePage {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 100%;
         }
 
         #articlePage {
@@ -69,25 +102,37 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            width: 100%;
             max-height: 75vh;
             overflow-y: auto;
             padding: 0 4px 20px 4px;
             scroll-behavior: smooth;
         }
 
-        #articlePage::-webkit-scrollbar {
+        #downloadPage {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            width: 100%;
+        }
+
+        #articlePage::-webkit-scrollbar,
+        #downloadPage::-webkit-scrollbar {
             width: 6px;
         }
-        #articlePage::-webkit-scrollbar-track {
+        #articlePage::-webkit-scrollbar-track,
+        #downloadPage::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
         }
-        #articlePage::-webkit-scrollbar-thumb {
+        #articlePage::-webkit-scrollbar-thumb,
+        #downloadPage::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.3);
             border-radius: 10px;
         }
-        #articlePage::-webkit-scrollbar-thumb:hover {
+        #articlePage::-webkit-scrollbar-thumb:hover,
+        #downloadPage::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.5);
         }
 
@@ -166,12 +211,8 @@
         }
 
         @keyframes rotate {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         h1 {
@@ -199,7 +240,8 @@
         }
 
         .download-btn,
-        .article-btn {
+        .article-btn,
+        .back-btn {
             display: inline-block;
             background: linear-gradient(to right, #333, #555);
             color: white;
@@ -220,14 +262,16 @@
         }
 
         .download-btn:hover,
-        .article-btn:hover {
+        .article-btn:hover,
+        .back-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
             background: linear-gradient(to right, #444, #666);
         }
 
         .download-btn i,
-        .article-btn i {
+        .article-btn i,
+        .back-btn i {
             font-size: 1.5rem;
         }
 
@@ -305,7 +349,92 @@
             background: linear-gradient(to right, #555, #777);
         }
 
-        @media (max-width:480px) {
+        /* ===== 下载选择页面样式 ===== */
+        .download-title {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .download-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 500px;
+            margin: 20px 0 30px 0;
+        }
+
+        .download-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .download-option:hover {
+            transform: translateY(-5px);
+        }
+
+        .circle-btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #333, #555);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .circle-btn::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: conic-gradient(transparent, rgba(255, 255, 255, 0.2), transparent 30%);
+            animation: rotate 6s linear infinite;
+        }
+
+        .circle-btn img {
+            position: relative;
+            z-index: 2;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .download-option:hover .circle-btn {
+            border-color: #fff;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #444, #666);
+        }
+
+        .option-label {
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: #ddd;
+        }
+
+        .option-sub {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            color: #aaa;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 480px) {
             .container {
                 padding: 30px 20px;
             }
@@ -346,6 +475,38 @@
             #articlePage {
                 max-height: 70vh;
             }
+            .language-selector-container {
+                top: 10px;
+                left: 10px;
+            }
+            .language-selector {
+                min-width: 100px;
+                font-size: 0.8rem;
+                padding: 6px 10px;
+            }
+            .download-title {
+                font-size: 1.8rem;
+            }
+            .circle-btn {
+                width: 80px;
+                height: 80px;
+            }
+            .download-options {
+                gap: 20px;
+            }
+            .option-label {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .circle-btn {
+                width: 70px;
+                height: 70px;
+            }
+            .download-options {
+                gap: 15px;
+            }
         }
     </style>
 </head>
@@ -353,7 +514,24 @@
     <div class="background-animation" id="bgAnim"></div>
     <div class="container">
 
-        <!-- 主页 -->
+        <!-- 语言选择器（11种语言） -->
+        <div class="language-selector-container">
+            <select id="languageSelector" class="language-selector">
+                <option value="zh">中文</option>
+                <option value="en">English</option>
+                <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
+                <option value="ru">Русский</option>
+                <option value="pt">Português</option>
+                <option value="es">Español</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="ar">العربية</option>
+                <option value="hi">हिन्दी</option>
+            </select>
+        </div>
+
+        <!-- ===== 主页 ===== -->
         <div id="homePage">
             <div class="logo">
                 <div class="logo-inner">
@@ -364,36 +542,297 @@
                     </div>
                 </div>
             </div>
-            <h1>Duludulu IDE</h1>
-            <p class="subtitle">轻量级开发环境，点击下方按钮下载</p>
+            <h1 id="pageTitle">Duludulu IDE</h1>
+            <p class="subtitle" id="subtitleText">轻量级开发环境，点击下方按钮下载</p>
             <div class="btn-group">
-                <!-- 下载链接已更新为新地址 -->
-                <a href="https://223-109-125-231-v3.pd1.cjjd19.com/user-share-free-download-cdn.123295.com/123-96/96a6700a/4001552516-0/96a6700a2e0a34f61c39a3f7cc230060/c-m9018?v=5&t=1788784502&r=RP9K15&bzc=2&bzs=343030313535323531363a33363931393536393a3839323139323534393a343030313535323531363a32&ur=vvagevgvpgvue&urn=0&s=178878450299f0849d88043f9fc1e87ba0a6ac9cfb&bzp=0&bi=3690598689&filename=Duludulu+IDE.7z&x-mf-biz-cid=1cc1fff2-b642-40b1-85cb-155591daa93b-3dab77&auto_redirect=0&ndcp=1&cache_type=1" class="download-btn" target="_blank"><i class="fas fa-download"></i> 下载 (Duludulu IDE.7z)</a>
-                <button class="article-btn" id="showArticleBtn"><i class="fas fa-newspaper"></i> 文章</button>
+                <button class="download-btn" id="showDownloadBtn"><i class="fas fa-download"></i> <span id="downloadBtnText">下载</span></button>
+                <button class="article-btn" id="showArticleBtn"><i class="fas fa-newspaper"></i> <span id="articleBtnText">文章</span></button>
             </div>
-            <div class="footer">©2026 Duludulu AI · 小船党工作室</div>
+            <div class="footer" id="footerText">©2026 Duludulu AI · 小船党工作室</div>
         </div>
 
-        <!-- 文章页面 -->
-        <div id="articlePage">
-            <div class="article-text">
-                <p>尊敬的用户，你好！</p>
-                <p>我是小船党工作室开发人员，作为一位AI开发人员，我们在此要深刻感谢杭州Deepseek公司。本人不是什么厉害的技术人员，纯是业余爱好者，目前研究方向是gguf AI开发和系统研究，我的目标只有一个：买个大点的U盘，存的下AI模型源码。</p>
-                <p>当然，我没什么资产，你可以点击下方的捐赠箱给我捐一点点钱（2块钱就可以了），也可以直接下载，我不强求，若是愿意捐赠，我再此万分感谢！🙏</p>
+        <!-- ===== 下载选择页 ===== -->
+        <div id="downloadPage">
+            <h2 class="download-title" id="downloadTitle">选择版本</h2>
+            <div class="download-options">
+                <!-- Windows -->
+                <a href="https://223-109-125-226-v3.pd1.cjjd19.com/user-other-free-download-cdn.123295.com/123-755/c6538072/4001552516-0/c6538072fd419cddbf0ba47c53f642f3/c-m12?t=1789561768&bzs=343030313535323531363a323a313a31303630393533333233&bi=2453406636&ur=vvagevgvmganu&urn=0&r=Q97YDE&bzc=1&bzp=0&v=5&s=178956176844456ef811c161ce518711094e195dc8&filename=Duludulu+IDE++of+Windows+2.0.rar&cache_type=2&x-mf-biz-cid=9d54c540-88e2-4e18-a785-bcd98859c194&auto_redirect=0&ndcp=1" target="_blank" class="download-option">
+                    <div class="circle-btn">
+                        <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/windows11/default.svg" alt="Windows11" width="24" height="24">
+                    </div>
+                    <div class="option-label">Windows</div>
+                    <div class="option-sub">.rar</div>
+                </a>
+                <!-- Linux -->
+                <a href="https://223-109-125-229-v3.pd1.cjjd19.com/user-other-free-download-cdn.123295.com/123-129/f16f94a6/4001552516-0/f16f94a60dd299ed7e43f86be2e38081/c-m42?r=YLGOLL&v=5&bzc=1&bzs=343030313535323531363a323a313a383831343235373330&bzp=0&bi=2453406636&t=1789561890&ur=vvagevgvmganu&urn=0&s=1789561890582167b17869914dc2094cd25c09a0d4&filename=Duludulu+IDE+of+Linux+2.0.tar.gz&cache_type=2&x-mf-biz-cid=d2c97e68-6ce6-48b0-8eac-52648bda4454&auto_redirect=0&ndcp=1" target="_blank" class="download-option">
+                    <div class="circle-btn">
+                        <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/linux/default.svg" alt="Linux" width="24" height="24">
+                    </div>
+                    <div class="option-label">Linux</div>
+                    <div class="option-sub">.tar.gz</div>
+                </a>
+                <!-- macOS -->
+                <a href="https://223-109-125-230-v3.pd1.cjjd19.com/user-other-free-download-cdn.123295.com/123-117/9d35f192/4001552516-0/9d35f192797eb139f0b5ecc20c2c3875/c-m12?bzp=0&bi=2453406636&urn=0&t=1789561918&ur=vvagevgvmganu&r=7DWUF6&v=5&bzc=1&bzs=343030313535323531363a323a313a393732383638313036&s=1789561918b8fe174f559a2d74a7871edd1d1335c1&filename=Duludulu+IDE+of+Mac+2.0.zip&cache_type=2&x-mf-biz-cid=0b1f6328-7238-4fb4-b218-4f4b8e12028e&auto_redirect=0&ndcp=1" target="_blank" class="download-option">
+                    <div class="circle-btn">
+                        <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/apple/default.svg" alt="Apple" width="24" height="24">
+                    </div>
+                    <div class="option-label">macOS</div>
+                    <div class="option-sub">.zip</div>
+                </a>
             </div>
+            <button class="back-btn" id="backFromDownload"><i class="fas fa-arrow-left"></i> <span id="backDownloadText">返回</span></button>
+        </div>
 
-            <!-- 图片区域：同目录下的 code.png，完整显示，可滚动查看 -->
+        <!-- ===== 文章页 ===== -->
+        <div id="articlePage">
+            <div class="article-text" id="articleContent">
+                <p id="articleP1"></p>
+                <p id="articleP2"></p>
+                <p id="articleP3"></p>
+            </div>
             <div class="article-image">
                 <img src="code.png" alt="code.png" loading="lazy">
             </div>
-
-            <button class="back-btn" id="backHomeBtn"><i class="fas fa-arrow-left"></i> 返回主页</button>
+            <button class="back-btn" id="backHomeBtn"><i class="fas fa-arrow-left"></i> <span id="backBtnText">返回主页</span></button>
         </div>
 
     </div>
 
     <script>
         (function() {
+            // ===== 11种语言翻译（包含文章段落） =====
+            const translations = {
+                zh: {
+                    title: "Duludulu IDE",
+                    subtitle: "轻量级开发环境，点击下方按钮下载",
+                    downloadBtn: "下载",
+                    articleBtn: "文章",
+                    footer: "©2026 Duludulu AI · 小船党工作室",
+                    downloadTitle: "选择版本",
+                    backDownload: "返回",
+                    backHome: "返回主页",
+                    articleP1: "你好，你要是点进来了，那就看完吧。我开发到0.8预发布版时，手贱，删了源码，1.0便是0.8的升级版，好在，1.0最终成功发布，你们也看到了吧？为了让你们有更好的体验，我抓紧时间，在保证质量的前提下，我在2026年9月9日，发布了2.0。",
+                    articleP2: "那有的朋友就问了：“诶，你又赚不到钱，全靠有缘人扫你那二维码赚点施舍来的钱，做了干什么呢？”这问题问得好。但是，我做这些不嫌累，单纯只是认为，做这种事好玩，也有兴趣，也有梦想。好玩在于我曾做过AI开发，总归是有几次尝试了，但成功率太低了，于是，我转头看向了开发IDE，IDE开发除了了配置条件有点高，我还是在C盘爆满的时候搞定了1.0~2.0。那种C盘在快满的时候紧急停止操作，然后清C盘，那种刺激感，真是令人流连忘返！兴趣在于我现在喜欢和AI聊天。我会像老板一样，吩咐AI干这干那，起先我和AI讲话几乎就是对牛弹琴，我说这，他做那，后面逐渐摸清AI的底细，学会口语化的清晰表达，让AI适应，也不会让我陷入AI的泥潭。那梦想，在于我用VScode老费劲了。VScode对我来说和天书一样，纯英文，无中文，界面令我难受，而且又卡又占空间。为了让我和大家都能使用，我专门开发这个IDE，也是希望界面不会那么乱，简洁无缓存（虽然界面还是很糊）。也为了小众但实用的语言能被人看见，我添加了各式各样的语言，2.0第一次添加Kuku Yalanji，那叫一个兴奋！",
+                    articleP3: "好了，我，后面希望能让界面更美观，既有苹果的丝滑流畅，又有极客的感觉，后面我会尝试添加Swift语言，让界面优雅。若是可以，你能不能用下面的2维码施舍我2块钱，就当请我喝可乐了，我也会更加努力开发，感谢每位同路人！"
+                },
+                en: {
+                    title: "Duludulu IDE",
+                    subtitle: "Lightweight development environment, click the button below to download",
+                    downloadBtn: "Download",
+                    articleBtn: "Article",
+                    footer: "©2026 Duludulu AI · Xiaochuandang Studio",
+                    downloadTitle: "Choose Version",
+                    backDownload: "Back",
+                    backHome: "Back to Home",
+                    articleP1: "Hello, if you clicked in, please read through. When I was developing version 0.8 pre-release, I accidentally deleted the source code. Version 1.0 is an upgraded version of 0.8. Fortunately, 1.0 was successfully released in the end, and you've seen it, right? To give you a better experience, I hurried up and, while ensuring quality, released version 2.0 on September 9, 2026.",
+                    articleP2: "Some friends might ask: 'Hey, you can't make any money from this, you're relying on generous people scanning your QR code to give you a little charity, so why do it?' That's a good question. But I don't find it tiring to do this; I simply think it's fun, interesting, and a dream. The fun part is that I've tried AI development a few times, but the success rate was too low, so I turned to developing an IDE. Although IDE development has high configuration requirements, I still managed to complete 1.0~2.0 even when my C drive was full. The thrill of urgently stopping operations when the C drive was about to fill up, then clearing it—that excitement is truly unforgettable! The interest comes from the fact that I now enjoy chatting with AI. I command AI like a boss, and at first, it was like talking to a wall—I said one thing, it did another. But gradually I figured out AI's patterns and learned to express myself clearly in colloquial language, making AI adapt without getting stuck in its trap. As for the dream, I found VScode really difficult to use. To me, VScode was like a foreign language—pure English, no Chinese, the interface made me uncomfortable, and it was slow and space-consuming. To make it usable for myself and everyone, I developed this IDE, hoping for a cleaner interface, simplicity, and no cache (even though the interface is still a bit blurry). I also wanted to showcase niche but practical languages, so I added various ones; version 2.0 added Kuku Yalanji for the first time, and I was so excited!",
+                    articleP3: "Alright, in the future, I hope to make the interface more beautiful—both smooth and elegant like Apple, and with a geeky feel. I'll try to add Swift language to make the interface more graceful. If possible, could you donate 2 yuan via the QR code below, just to buy me a cola? I'll work even harder. Thanks to every fellow traveler!"
+                },
+                de: {
+                    title: "Duludulu IDE",
+                    subtitle: "Leichte Entwicklungsumgebung, klicken Sie unten zum Herunterladen",
+                    downloadBtn: "Herunterladen",
+                    articleBtn: "Artikel",
+                    footer: "©2026 Duludulu AI · Xiaochuandang Studio",
+                    downloadTitle: "Version wählen",
+                    backDownload: "Zurück",
+                    backHome: "Zurück zur Startseite",
+                    articleP1: "Hallo, wenn Sie hereingeklickt haben, lesen Sie bitte zu Ende. Als ich die Vorabversion 0.8 entwickelte, habe ich aus Versehen den Quellcode gelöscht. Version 1.0 ist ein Upgrade von 0.8. Glücklicherweise wurde 1.0 schließlich erfolgreich veröffentlicht, haben Sie es gesehen? Um Ihnen ein besseres Erlebnis zu bieten, habe ich mich beeilt und am 9. September 2026 Version 2.0 veröffentlicht – unter Beibehaltung der Qualität.",
+                    articleP2: "Manche Freunde fragen: 'Hey, du verdienst doch kein Geld damit, du lebst von den Spenden, die dir wohlwollende Leute durch das Scannen deines QR-Codes zukommen lassen – warum machst du das überhaupt?' Das ist eine gute Frage. Aber ich werde nicht müde, das zu tun; ich denke einfach, es macht Spaß, es ist interessant und ein Traum. Der Spaß liegt darin, dass ich schon ein paar Mal AI-Entwicklung versucht habe, aber die Erfolgsquote war zu gering, also wandte ich mich der IDE-Entwicklung zu. Obwohl die Konfigurationsanforderungen hoch sind, habe ich 1.0~2.0 trotz voller C-Festplatte geschafft. Das Gefühl, wenn die C-Festplatte fast voll ist und man dringend stoppen und löschen muss – das ist unvergesslich! Das Interesse kommt daher, dass ich jetzt gerne mit AI chatte. Ich gebe der AI Befehle wie ein Chef, und anfangs war es wie mit einer Wand zu reden – ich sagte dies, sie tat das. Aber nach und nach durchschaute ich die AI und lernte, mich klar und umgangssprachlich auszudrücken, sodass sich die AI anpasste und ich nicht in ihre Falle tappte. Der Traum: VScode war für mich ein Buch mit sieben Siegeln – nur Englisch, kein Chinesisch, die Oberfläche war unangenehm, langsam und speicherfressend. Damit ich und alle es nutzen können, habe ich diese IDE entwickelt – mit einer übersichtlichen, einfachen Oberfläche ohne Cache (auch wenn sie noch etwas verschwommen ist). Auch um seltene, aber nützliche Sprachen sichtbar zu machen, habe ich verschiedene Sprachen hinzugefügt; Version 2.0 fügte erstmals Kuku Yalanji hinzu – das war ein Hochgefühl!",
+                    articleP3: "Nun, in Zukunft möchte ich die Oberfläche noch schöner gestalten – sowohl geschmeidig wie Apple als auch mit einem Geek-Feeling. Ich werde versuchen, Swift hinzuzufügen, um die Oberfläche eleganter zu machen. Wenn möglich, könntest du mir per QR-Code 2 Yuan spenden, quasi für eine Cola? Ich werde noch härter arbeiten. Danke an alle Mitstreiter!"
+                },
+                fr: {
+                    title: "Duludulu IDE",
+                    subtitle: "Environnement de développement léger, cliquez sur le bouton ci-dessous pour télécharger",
+                    downloadBtn: "Télécharger",
+                    articleBtn: "Article",
+                    footer: "©2026 Duludulu AI · Xiaochuandang Studio",
+                    downloadTitle: "Choisir la version",
+                    backDownload: "Retour",
+                    backHome: "Retour à l'accueil",
+                    articleP1: "Bonjour, si vous avez cliqué, lisez jusqu'au bout. Lorsque je développais la pré-version 0.8, j'ai accidentellement supprimé le code source. La version 1.0 est une mise à niveau de 0.8. Heureusement, la 1.0 a finalement été publiée avec succès, vous l'avez vue ? Pour vous offrir une meilleure expérience, je me suis dépêché et, tout en garantissant la qualité, j'ai publié la version 2.0 le 9 septembre 2026.",
+                    articleP2: "Certains amis demandent : 'Hé, tu ne gagnes pas d'argent, tu comptes sur les gens généreux qui scannent ton QR code pour te donner un peu de charité, alors pourquoi le fais-tu ?' C'est une bonne question. Mais je ne me lasse pas de faire cela ; je pense simplement que c'est amusant, intéressant et un rêve. Le côté amusant, c'est que j'ai essayé le développement IA quelques fois, mais le taux de réussite était trop faible, alors je me suis tourné vers le développement d'IDE. Bien que les conditions de configuration soient élevées, j'ai réussi à réaliser 1.0~2.0 même lorsque mon disque C était plein. La sensation d'urgence quand le disque C est presque plein, de devoir arrêter et nettoyer – c'est inoubliable ! L'intérêt vient du fait que j'aime maintenant discuter avec l'IA. Je donne des ordres à l'IA comme un patron, et au début, c'était comme parler à un mur – je disais ceci, elle faisait cela. Mais peu à peu, j'ai compris les rouages de l'IA et appris à m'exprimer clairement et familièrement, pour que l'IA s'adapte sans que je tombe dans ses pièges. Quant au rêve, j'ai trouvé VScode très difficile à utiliser. Pour moi, VScode était comme un livre en chinois – tout en anglais, pas de chinois, l'interface me déplaisait, et c'était lent et gourmand en espace. Pour que moi et tout le monde puissions l'utiliser, j'ai développé cet IDE, avec une interface claire et simple, sans cache (même si elle est encore un peu floue). J'ai aussi ajouté diverses langues pour mettre en avant des langues niche mais pratiques ; la version 2.0 a ajouté Kuku Yalanji pour la première fois, quelle excitation !",
+                    articleP3: "Bon, à l'avenir, j'aimerais rendre l'interface plus belle – à la fois fluide comme Apple et avec un côté geek. J'essaierai d'ajouter Swift pour une interface plus élégante. Si possible, pourriez-vous me donner 2 yuans via le QR code ci-dessous, histoire de m'offrir un Coca ? Je travaillerai encore plus dur. Merci à tous les compagnons de route !"
+                },
+                ru: {
+                    title: "Duludulu IDE",
+                    subtitle: "Лёгкая среда разработки, нажмите кнопку ниже для загрузки",
+                    downloadBtn: "Скачать",
+                    articleBtn: "Статья",
+                    footer: "©2026 Duludulu AI · Xiaochuandang Studio",
+                    downloadTitle: "Выберите версию",
+                    backDownload: "Назад",
+                    backHome: "Вернуться на главную",
+                    articleP1: "Здравствуйте, если вы зашли, прочитайте до конца. Когда я разрабатывал предварительную версию 0.8, я случайно удалил исходный код. Версия 1.0 — это улучшенная версия 0.8. К счастью, 1.0 в конечном итоге была успешно выпущена, вы ведь видели? Чтобы улучшить ваше впечатление, я поторопился и, сохраняя качество, выпустил версию 2.0 9 сентября 2026 года.",
+                    articleP2: "Некоторые друзья спрашивают: 'Эй, ты ведь не зарабатываешь деньги, ты полагаешься на благотворительные пожертвования от добрых людей, сканирующих твой QR-код, так зачем ты это делаешь?' Хороший вопрос. Но мне не надоедает это делать; я просто считаю, что это весело, интересно и является мечтой. Веселье в том, что я пробовал разработку ИИ несколько раз, но успех был слишком низким, поэтому я переключился на разработку IDE. Хотя требования к конфигурации высоки, мне удалось сделать 1.0~2.0 даже при полном диске C. Ощущение, когда диск C почти заполнен, и нужно срочно остановиться и очистить его – это незабываемо! Интерес в том, что теперь мне нравится общаться с ИИ. Я командую ИИ, как начальник, и сначала это было как разговор с глухой стеной – я говорю одно, он делает другое. Но постепенно я понял, как работает ИИ, научился ясно и разговорно выражаться, чтобы ИИ адаптировался, и не попадать в его ловушки. Мечта в том, что VScode для меня был как китайская грамота – всё на английском, без русского, интерфейс раздражал, медленно и занимал много места. Чтобы я и все могли пользоваться, я разработал эту IDE – с чистым, простым интерфейсом, без кэша (хоть он пока и немного размытый). Я также добавил разные языки, чтобы показать редкие, но полезные языки; версия 2.0 впервые добавила Kuku Yalanji – это было так волнительно!",
+                    articleP3: "Итак, в будущем я хочу сделать интерфейс более красивым – одновременно гладким, как у Apple, и с гиковским ощущением. Я попробую добавить Swift, чтобы сделать интерфейс элегантнее. Если возможно, не могли бы вы пожертвовать 2 юаня через QR-код ниже, как на колу? Я буду работать ещё усерднее. Спасибо каждому попутчику!"
+                },
+                pt: {
+                    title: "Duludulu IDE",
+                    subtitle: "Ambiente de desenvolvimento leve, clique no botão abaixo para baixar",
+                    downloadBtn: "Baixar",
+                    articleBtn: "Artigo",
+                    footer: "©2026 Duludulu AI · Xiaochuandang Studio",
+                    downloadTitle: "Escolher versão",
+                    backDownload: "Voltar",
+                    backHome: "Voltar ao início",
+                    articleP1: "Olá, se você clicou, leia até o fim. Quando eu estava desenvolvendo a pré-versão 0.8, acidentalmente deletei o código-fonte. A versão 1.0 é uma atualização da 0.8. Felizmente, a 1.0 foi finalmente lançada com sucesso, você viu, não foi? Para proporcionar uma melhor experiência, corri contra o tempo e, mantendo a qualidade, lancei a versão 2.0 em 9 de setembro de 2026.",
+                    articleP2: "Alguns amigos perguntam: 'Ei, você não ganha dinheiro com isso, vive das doações de pessoas boas que escaneiam seu QR Code, então por que faz isso?' É uma boa pergunta. Mas não me canso de fazer isso; acho que é divertido, interessante e um sonho. A diversão está em que já tentei desenvolver IA algumas vezes, mas a taxa de sucesso era muito baixa, então mudei para o desenvolvimento de IDE. Embora os requisitos de configuração sejam altos, consegui fazer 1.0~2.0 mesmo com o disco C cheio. A sensação de quando o disco C está quase cheio e você precisa parar urgentemente e limpar – é inesquecível! O interesse vem de que agora gosto de conversar com IA. Dou ordens à IA como um chefe, e no início era como falar com uma parede – eu dizia uma coisa, ela fazia outra. Mas aos poucos entendi o funcionamento da IA e aprendi a me expressar de forma clara e coloquial, para que a IA se adaptasse sem eu cair em suas armadilhas. O sonho é que eu achava o VScode muito difícil de usar. Para mim, era como um livro em chinês – tudo em inglês, sem português, a interface me incomodava, era lento e ocupava muito espaço. Para que eu e todos possamos usar, desenvolvi esta IDE – com uma interface limpa, simples e sem cache (embora ainda esteja um pouco desfocada). Também adicionei várias linguagens para dar visibilidade a línguas nicho mas úteis; a versão 2.0 adicionou Kuku Yalanji pela primeira vez – que emoção!",
+                    articleP3: "Bem, no futuro, quero tornar a interface mais bonita – ao mesmo tempo fluida como a Apple e com um toque geek. Vou tentar adicionar Swift para uma interface mais elegante. Se possível, você poderia doar 2 yuans via QR Code abaixo, como se fosse pagar um refrigerante? Vou me esforçar ainda mais. Obrigado a todos os companheiros de jornada!"
+                },
+                es: {
+                    title: "Duludulu IDE",
+                    subtitle: "Entorno de desarrollo ligero, haz clic en el botón de abajo para descargar",
+                    downloadBtn: "Descargar",
+                    articleBtn: "Artículo",
+                    footer: "©2026 Duludulu AI · Xiaochuandang Studio",
+                    downloadTitle: "Elegir versión",
+                    backDownload: "Atrás",
+                    backHome: "Volver al inicio",
+                    articleP1: "Hola, si has hecho clic, léelo hasta el final. Cuando estaba desarrollando la versión preliminar 0.8, eliminé accidentalmente el código fuente. La versión 1.0 es una actualización de 0.8. Afortunadamente, 1.0 se lanzó con éxito, ¿lo viste? Para ofrecerte una mejor experiencia, me apresuré y, garantizando la calidad, lancé la versión 2.0 el 9 de septiembre de 2026.",
+                    articleP2: "Algunos amigos preguntan: 'Oye, no ganas dinero con esto, dependes de la caridad de la gente que escanea tu código QR, ¿por qué lo haces?' Es una buena pregunta. Pero no me canso de hacer esto; simplemente creo que es divertido, interesante y un sueño. Lo divertido es que he intentado desarrollar IA algunas veces, pero la tasa de éxito era muy baja, así que me pasé al desarrollo de IDE. Aunque los requisitos de configuración son altos, logré hacer 1.0~2.0 incluso con el disco C lleno. La sensación de cuando el disco C está casi lleno y hay que parar urgentemente y limpiar – es inolvidable. El interés viene de que ahora me gusta chatear con IA. Le doy órdenes a la IA como un jefe, y al principio era como hablar con una pared – yo decía una cosa, ella hacía otra. Pero poco a poco entendí cómo funciona la IA y aprendí a expresarme de forma clara y coloquial, para que la IA se adapte y yo no caiga en sus trampas. El sueño es que VScode me resultaba muy difícil de usar. Para mí era como un libro en chino – todo en inglés, sin español, la interfaz me incomodaba, era lento y ocupaba mucho espacio. Para que yo y todos podamos usarlo, desarrollé este IDE – con una interfaz limpia, simple y sin caché (aunque todavía está un poco borrosa). También añadí varios lenguajes para dar visibilidad a lenguajes nicho pero prácticos; la versión 2.0 añadió Kuku Yalanji por primera vez – ¡qué emoción!",
+                    articleP3: "Bueno, en el futuro quiero hacer la interfaz más bonita – a la vez fluida como Apple y con un toque geek. Intentaré añadir Swift para una interfaz más elegante. Si es posible, ¿podrías donar 2 yuanes a través del código QR de abajo, como para invitarme a un refresco? Trabajaré aún más duro. Gracias a todos los compañeros de viaje."
+                },
+                ja: {
+                    title: "Duludulu IDE",
+                    subtitle: "軽量な開発環境、下のボタンをクリックしてダウンロード",
+                    downloadBtn: "ダウンロード",
+                    articleBtn: "記事",
+                    footer: "©2026 Duludulu AI · Xiaochuandang Studio",
+                    downloadTitle: "バージョンを選択",
+                    backDownload: "戻る",
+                    backHome: "ホームに戻る",
+                    articleP1: "こんにちは、クリックしたら最後まで読んでください。バージョン0.8のプレリリースを開発していたとき、うっかりソースコードを削除してしまいました。バージョン1.0は0.8のアップグレード版です。幸い、1.0は最終的に無事リリースされました。皆さんもご覧になりましたよね？より良い体験を提供するため、私は急いで品質を確保しつつ、2026年9月9日にバージョン2.0をリリースしました。",
+                    articleP2: "ある友人はこう尋ねます：「ねえ、あなたはお金を稼げないのに、QRコードをスキャンしてくれる善意の人々からの施しに頼っているだけで、なぜそんなことをするの？」良い質問です。しかし、私はこれをして疲れません。単に楽しいし、興味があり、夢だからです。楽しいのは、以前AI開発を何度か試みたものの、成功率が低すぎたため、IDE開発に目を向けたことです。IDE開発は設定条件が高いですが、Cドライブが満杯の状態でも1.0〜2.0をなんとか完成させました。Cドライブがもうすぐ満杯になるのを急いで止めてクリアするあのスリルは、本当に忘れられません！興味は、今はAIとチャットするのが好きだということです。私はまるで上司のようにAIに指示を出します。最初はAIとの会話はまるで馬の耳に念仏でしたが、徐々にAIの仕組みを理解し、口語的で明確な表現を身につけ、AIに適応させると同時に、AIの罠にはまらないようにしました。夢は、VScodeを使うのがとても大変だったことです。VScodeは私にとっては天書のようなもので、全部英語で日本語がなく、インターフェースも使いにくく、しかも重くて容量を食います。自分や皆さんが使えるように、私はこのIDEを開発しました。インターフェースをすっきりさせ、シンプルでキャッシュレスにしたい（まだ少しぼやけていますが）。また、ニッチで実用的な言語を世に知らせるため、様々な言語を追加しました。2.0で初めてKuku Yalanjiを追加したときは、本当に興奮しました！",
+                    articleP3: "さて、今後はインターフェースをもっと美しくしたいと思います。Appleのような滑らかさと、ギークな感覚の両方を備えたものに。Swift言語を追加して、よりエレガントなインターフェースにしたいと思います。もしよろしければ、下のQRコードから2元を寄付していただけませんか？コーラをおごってもらうようなものです。私はもっと頑張ります。すべての仲間に感謝します！"
+                },
+                ko: {
+                    title: "Duludulu IDE",
+                    subtitle: "가벼운 개발 환경, 아래 버튼을 클릭하여 다운로드",
+                    downloadBtn: "다운로드",
+                    articleBtn: "기사",
+                    footer: "©2026 Duludulu AI · Xiaochuandang Studio",
+                    downloadTitle: "버전 선택",
+                    backDownload: "뒤로",
+                    backHome: "홈으로 돌아가기",
+                    articleP1: "안녕하세요, 클릭하셨다면 끝까지 읽어주세요. 0.8 사전 출시 버전을 개발할 때 실수로 소스 코드를 삭제했습니다. 1.0 버전은 0.8의 업그레이드 버전입니다. 다행히 1.0은 결국 성공적으로 출시되었고, 여러분도 보셨죠? 더 나은 경험을 위해 시간을 쪼개고 품질을 보장하면서 2026년 9월 9일에 2.0 버전을 출시했습니다.",
+                    articleP2: "어떤 친구들은 묻습니다: '야, 너는 돈도 못 벌면서, QR 코드를 스캔해주는 인연 있는 사람들의 자선에 의존하는데, 왜 하는 거야?' 좋은 질문입니다. 하지만 저는 이 일을 하는 데 지치지 않습니다. 단지 재미있고, 흥미롭고, 꿈이라고 생각하기 때문입니다. 재미있는 점은 제가 AI 개발을 몇 번 시도했지만 성공률이 너무 낮아서 IDE 개발로 방향을 돌렸다는 것입니다. IDE 개발은 설정 조건이 까다롭지만, C 드라이브가 꽉 찼을 때도 1.0~2.0을 해냈습니다. C 드라이브가 거의 꽉 찼을 때 긴급히 중단하고 정리하는 그 스릴은 정말 잊을 수 없습니다! 흥미는 이제 AI와 채팅하는 것을 좋아한다는 데 있습니다. 저는 사장님처럼 AI에게 이것저것 지시합니다. 처음에는 AI와 대화하는 것이 마치 소 귀에 경 읽기였지만, 점차 AI의 특성을 파악하고 구어체로 명확하게 표현하는 법을 배워 AI가 적응하도록 하면서도 AI의 늪에 빠지지 않았습니다. 꿈은 VScode 사용이 너무 힘들었다는 점입니다. VScode는 저에게 천서와 같아서, 순수 영어에 한국어가 없고 인터페이스가 불편했으며, 느리고 용량을 많이 차지했습니다. 저와 여러분 모두가 사용할 수 있도록, 저는 이 IDE를 개발했습니다. 인터페이스를 깔끔하고 간결하며 캐시 없이 만들고 싶었습니다(아직 흐릿하지만). 또한 틈새 시장의 실용적인 언어를 알리기 위해 다양한 언어를 추가했습니다. 2.0에서 처음으로 Kuku Yalanji를 추가했을 때는 정말 신났습니다!",
+                    articleP3: "자, 앞으로는 인터페이스를 더 아름답게 만들고 싶습니다. Apple처럼 부드럽고 세련되면서도 괴짜 감각이 있는 스타일로. Swift 언어를 추가하여 더 우아한 인터페이스를 만들려고 합니다. 가능하시다면 아래 QR 코드로 2위안을 기부해 주실 수 있나요? 콜라 한 잔 사는 셈 치고요. 더 열심히 개발하겠습니다. 모든 동료 여행자에게 감사드립니다!"
+                },
+                ar: {
+                    title: "Duludulu IDE",
+                    subtitle: "بيئة تطوير خفيفة، انقر على الزر أدناه للتحميل",
+                    downloadBtn: "تحميل",
+                    articleBtn: "مقال",
+                    footer: "©2026 Duludulu AI · Xiaochuandang Studio",
+                    downloadTitle: "اختر الإصدار",
+                    backDownload: "رجوع",
+                    backHome: "العودة إلى الصفحة الرئيسية",
+                    articleP1: "مرحباً، إذا قمت بالنقر، اقرأ حتى النهاية. عندما كنت أطور الإصدار الأولي 0.8، قمت بحذف الكود المصدري عن طريق الخطأ. الإصدار 1.0 هو نسخة مطورة من 0.8. لحسن الحظ، تم إصدار 1.0 بنجاح في النهاية، أليس كذلك؟ لتقديم تجربة أفضل لكم، أسرعت وحرصت على الجودة، وأصدرت الإصدار 2.0 في 9 سبتمبر 2026.",
+                    articleP2: "يسأل بعض الأصدقاء: 'مهلاً، أنت لا تربح مالاً من هذا، تعتمد على الصدقات من الأشخاص الطيبين الذين يمسحون رمز QR الخاص بك، فلماذا تفعل ذلك؟' سؤال جيد. لكنني لا أتعب من فعل هذا؛ أعتقد ببساطة أنه ممتع ومثير للاهتمام وهو حلم. المتعة تكمن في أنني جربت تطوير الذكاء الاصطناعي عدة مرات، لكن معدل النجاح كان منخفضاً جداً، لذا تحولت إلى تطوير IDE. على الرغم من أن متطلبات التكوين عالية، إلا أنني تمكنت من إنجاز 1.0~2.0 حتى عندما كان القرص C ممتلئاً. الشعور عندما يكون القرص C على وشك الامتلاء وتضطر إلى التوقف بشكل عاجل وتنظيفه – لا يُنسى! الاهتمام يأتي من أنني الآن أحب الدردشة مع الذكاء الاصطناعي. آمر الذكاء الاصطناعي مثل الرئيس، وفي البداية كان الأمر مثل التحدث إلى جدار – أقول شيئاً، يفعل شيئاً آخر. لكن تدريجياً فهمت خبايا الذكاء الاصطناعي وتعلمت التعبير بوضوح وبأسلوب عامي، مما جعل الذكاء الاصطناعي يتكيف دون أن أقع في فخاخه. أما الحلم، فهو أن VScode كان صعباً جداً بالنسبة لي. كان بالنسبة لي كالكتاب الصيني – كل شيء بالإنجليزية، بدون عربية، الواجهة مزعجة، وبطيئة وتستهلك مساحة. لكي أتمكن أنا والجميع من استخدامه، قمت بتطوير هذا IDE – بواجهة نظيفة وبسيطة وبدون ذاكرة مؤقتة (رغم أنها لا تزال ضبابية بعض الشيء). كما أضفت لغات متنوعة لإبراز اللغات المتخصصة ولكن العملية؛ أضاف الإصدار 2.0 لأول مرة Kuku Yalanji – يا له من حماس!",
+                    articleP3: "حسناً، في المستقبل، أريد جعل الواجهة أكثر جمالاً – سلسة مثل Apple وفي نفس الوقت ذات طابع تقني. سأحاول إضافة Swift لجعل الواجهة أكثر أناقة. إذا كان ممكناً، هل يمكنك التبرع بـ 2 يوان عبر رمز QR أدناه، كأن تدعو لي بكولا؟ سأعمل بجهد أكبر. شكراً لكل رفيق درب!"
+                },
+                hi: {
+                    title: "Duludulu IDE",
+                    subtitle: "हल्का विकास वातावरण, नीचे दिए गए बटन पर क्लिक करें डाउनलोड करने के लिए",
+                    downloadBtn: "डाउनलोड",
+                    articleBtn: "लेख",
+                    footer: "©2026 Duludulu AI · Xiaochuandang Studio",
+                    downloadTitle: "संस्करण चुनें",
+                    backDownload: "वापस",
+                    backHome: "होम पर वापस जाएँ",
+                    articleP1: "नमस्ते, अगर आपने क्लिक किया है, तो अंत तक पढ़ें। जब मैं 0.8 प्री-रिलीज़ विकसित कर रहा था, तो गलती से सोर्स कोड डिलीट हो गया। 1.0 संस्करण 0.8 का उन्नत संस्करण है। सौभाग्य से, 1.0 अंततः सफलतापूर्वक रिलीज़ हुआ, आपने देखा होगा? बेहतर अनुभव के लिए, मैंने जल्दी की और गुणवत्ता बनाए रखते हुए 9 सितंबर 2026 को 2.0 जारी किया।",
+                    articleP2: "कुछ दोस्त पूछते हैं: 'अरे, तुम इससे पैसे तो कमाते नहीं, पूरी तरह से उन लोगों पर निर्भर हो जो तुम्हारा QR कोड स्कैन करके थोड़ा दान देते हैं, तो करते क्यों हो?' यह अच्छा सवाल है। लेकिन मुझे यह करते थकान नहीं होती; मुझे लगता है कि यह मजेदार, दिलचस्प और एक सपना है। मजेदार बात यह है कि मैंने AI विकास कई बार आज़माया, लेकिन सफलता दर बहुत कम थी, इसलिए मैंने IDE विकास की ओर रुख किया। हालाँकि IDE विकास के लिए कॉन्फ़िगरेशन शर्तें थोड़ी अधिक हैं, फिर भी मैंने C ड्राइव भरा होने पर भी 1.0~2.0 पूरा किया। जब C ड्राइव लगभग भर जाती है और आपको तुरंत रोककर साफ़ करना पड़ता है, वह रोमांच वाकई अविस्मरणीय है! रुचि इस बात में है कि मुझे अब AI से बात करना पसंद है। मैं AI को बॉस की तरह आदेश देता हूँ, पहले तो यह बैल के आगे बीन बजाने जैसा था – मैं कहता कुछ, वह करता कुछ। धीरे-धीरे AI की समझ आई और मैंने स्पष्ट, बोलचाल की भाषा में व्यक्त करना सीखा, जिससे AI अनुकूल हो गया और मैं AI के जाल में नहीं फँसा। सपना यह है कि VScode मेरे लिए बहुत मुश्किल था। VScode मेरे लिए चीनी भाषा की किताब जैसा था – पूरी तरह अंग्रेज़ी, कोई हिंदी नहीं, इंटरफ़ेस असहज, और धीमा तथा जगह लेने वाला। ताकि मैं और सभी इसका उपयोग कर सकें, मैंने यह IDE विकसित किया – साफ, सरल और कैश-मुक्त इंटरफ़ेस (हालाँकि अभी भी थोड़ा धुंधला है)। साथ ही, छोटी लेकिन उपयोगी भाषाओं को दिखाने के लिए मैंने विभिन्न भाषाएँ जोड़ीं; 2.0 में पहली बार Kuku Yalanji जोड़ा गया – कितना रोमांचक था!",
+                    articleP3: "खैर, आगे मैं इंटरफ़ेस को और सुंदर बनाना चाहता हूँ – Apple की तरह चिकना और साथ ही गीकी फील के साथ। मैं Swift जोड़ने का प्रयास करूँगा ताकि इंटरफ़ेस और भी शानदार हो। अगर संभव हो, तो क्या आप नीचे दिए QR कोड से 2 युआन दान कर सकते हैं, जैसे मुझे कोला पिला रहे हों? मैं और मेहनत करूँगा। सभी साथी यात्रियों को धन्यवाद!"
+                }
+            };
+
+            // ===== DOM 引用 =====
+            const homePage = document.getElementById('homePage');
+            const articlePage = document.getElementById('articlePage');
+            const downloadPage = document.getElementById('downloadPage');
+
+            const elements = {
+                title: document.getElementById('pageTitle'),
+                subtitle: document.getElementById('subtitleText'),
+                downloadBtn: document.getElementById('downloadBtnText'),
+                articleBtn: document.getElementById('articleBtnText'),
+                footer: document.getElementById('footerText'),
+                downloadTitle: document.getElementById('downloadTitle'),
+                backDownload: document.getElementById('backDownloadText'),
+                backHome: document.getElementById('backBtnText'),
+                articleP1: document.getElementById('articleP1'),
+                articleP2: document.getElementById('articleP2'),
+                articleP3: document.getElementById('articleP3')
+            };
+
+            // ===== 语言切换函数 =====
+            function setLanguage(lang) {
+                const t = translations[lang] || translations.zh;
+                elements.title.textContent = t.title;
+                elements.subtitle.textContent = t.subtitle;
+                elements.downloadBtn.textContent = t.downloadBtn;
+                elements.articleBtn.textContent = t.articleBtn;
+                elements.footer.textContent = t.footer;
+                elements.downloadTitle.textContent = t.downloadTitle;
+                elements.backDownload.textContent = t.backDownload;
+                elements.backHome.textContent = t.backHome;
+                // 文章三段
+                elements.articleP1.textContent = t.articleP1;
+                elements.articleP2.textContent = t.articleP2;
+                elements.articleP3.textContent = t.articleP3;
+                document.title = t.title;
+            }
+
+            // ===== 语言选择器 =====
+            const langSelector = document.getElementById('languageSelector');
+            langSelector.addEventListener('change', function() {
+                setLanguage(this.value);
+            });
+
+            // 检测浏览器语言
+            const browserLang = navigator.language || 'zh';
+            const langMap = {
+                'zh': 'zh', 'en': 'en', 'de': 'de', 'fr': 'fr',
+                'ru': 'ru', 'pt': 'pt', 'es': 'es', 'ja': 'ja',
+                'ko': 'ko', 'ar': 'ar', 'hi': 'hi'
+            };
+            let defaultLang = 'zh';
+            for (const [code, lang] of Object.entries(langMap)) {
+                if (browserLang.startsWith(code)) {
+                    defaultLang = lang;
+                    break;
+                }
+            }
+            langSelector.value = defaultLang;
+            setLanguage(defaultLang);
+
+            // ===== 页面切换逻辑 =====
+            function showPage(page) {
+                homePage.style.display = 'none';
+                articlePage.style.display = 'none';
+                downloadPage.style.display = 'none';
+                page.style.display = 'flex';
+            }
+
+            document.getElementById('showDownloadBtn').addEventListener('click', function() {
+                showPage(downloadPage);
+            });
+
+            document.getElementById('showArticleBtn').addEventListener('click', function() {
+                showPage(articlePage);
+                articlePage.scrollTop = 0;
+            });
+
+            document.getElementById('backFromDownload').addEventListener('click', function() {
+                showPage(homePage);
+            });
+
+            document.getElementById('backHomeBtn').addEventListener('click', function() {
+                showPage(homePage);
+            });
+
+            // ===== 背景动画 =====
             const bg = document.getElementById('bgAnim');
             const gradients = [
                 'linear-gradient(135deg,#e8e8e8 0%,#1a1a1a 100%)',
@@ -409,17 +848,6 @@
                 bg.style.background = gradients[idx];
             }, 8000);
 
-            const home = document.getElementById('homePage');
-            const art = document.getElementById('articlePage');
-            document.getElementById('showArticleBtn').addEventListener('click', () => {
-                home.style.display = 'none';
-                art.style.display = 'flex';
-                art.scrollTop = 0;
-            });
-            document.getElementById('backHomeBtn').addEventListener('click', () => {
-                art.style.display = 'none';
-                home.style.display = 'flex';
-            });
         })();
     </script>
 </body>
