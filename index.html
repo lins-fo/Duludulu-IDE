@@ -14,7 +14,7 @@
         }
 
         body {
-            background: #0a0a0a;
+            background: #050608;
             color: #fff;
             min-height: 100vh;
             display: flex;
@@ -33,8 +33,56 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: linear-gradient(135deg, #e0e0e0 0%, #0a0a0a 100%);
-            transition: background 3s ease-in-out;
+            overflow: hidden;
+            background: radial-gradient(ellipse at 34% 28%, #1e2834 0%, #0a0e14 52%, #040507 100%);
+            background-size: 160% 160%;
+            animation: bgDrift 34s ease-in-out infinite alternate;
+        }
+
+        #bgCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* 缓慢漂移的柔光，让背景颜色始终在流动 */
+        .background-animation::before {
+            content: '';
+            position: absolute;
+            inset: -24%;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 30% 32%, rgba(62, 105, 152, 0.22) 0%, rgba(62, 105, 152, 0) 43%),
+                radial-gradient(circle at 72% 68%, rgba(103, 78, 158, 0.17) 0%, rgba(103, 78, 158, 0) 48%);
+            filter: blur(48px);
+            animation: bgWash 28s ease-in-out infinite alternate;
+            will-change: transform;
+        }
+
+        .background-animation::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 45%,
+                rgba(3, 5, 8, 0) 28%,
+                rgba(3, 5, 8, 0.24) 68%,
+                rgba(2, 3, 5, 0.58) 100%);
+        }
+
+        @keyframes bgDrift {
+            0% { background-position: 18% 10%; }
+            50% { background-position: 58% 44%; }
+            100% { background-position: 36% 82%; }
+        }
+
+        @keyframes bgWash {
+            0% { transform: translate3d(-3%, -2%, 0) scale(1.02) rotate(-1deg); }
+            50% { transform: translate3d(2%, 2%, 0) scale(1.08) rotate(1deg); }
+            100% { transform: translate3d(-1%, 4%, 0) scale(1.04) rotate(-0.5deg); }
         }
 
         .container {
@@ -54,6 +102,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            transition: max-width 0.45s ease, border-color 0.45s ease;
+        }
+
+        .container.product-mode {
+            max-width: 980px;
+            border-color: rgba(200, 161, 82, 0.24);
         }
 
         .language-selector-container {
@@ -86,7 +140,7 @@
             outline: none;
         }
 
-        #homePage, #articlePage, #downloadPage {
+        #homePage, #articlePage, #downloadPage, #productPage {
             width: 100%;
         }
 
@@ -115,6 +169,171 @@
             justify-content: center;
             padding: 10px 0;
             width: 100%;
+        }
+
+        #productPage {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 80vh;
+            max-height: 80vh;
+            overflow: hidden;
+        }
+
+        .product-title {
+            flex-shrink: 0;
+            font-size: 2.3rem;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #f2e5c3, #d7b36b, #f0dfb4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .product-hint {
+            flex-shrink: 0;
+            margin-bottom: 16px;
+            color: #ac9e82;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            text-align: center;
+            padding: 0 12px;
+        }
+
+        .product-scroll {
+            flex: 1 1 auto;
+            min-height: 0;
+            width: 100%;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            padding: 6px 12px 20px;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(191, 152, 78, 0.42) transparent;
+        }
+
+        .product-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .product-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+        }
+
+        .product-scroll::-webkit-scrollbar-thumb {
+            background: rgba(191, 152, 78, 0.34);
+            border-radius: 10px;
+        }
+
+        .product-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(211, 174, 100, 0.56);
+        }
+
+        .product-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .product-shot {
+            display: block;
+            width: min(100%, 780px);
+            margin: 0 auto;
+            padding: 9px;
+            border-radius: 20px;
+            background: rgba(19, 17, 11, 0.68);
+            border: 1px solid rgba(188, 151, 78, 0.16);
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+            cursor: zoom-in;
+            font: inherit;
+            color: inherit;
+            transition: border-color 0.35s ease, box-shadow 0.4s ease,
+                transform 0.35s ease, background 0.35s ease;
+        }
+
+        .product-shot:hover,
+        .product-shot:focus-visible {
+            border-color: rgba(205, 166, 87, 0.78);
+            background: rgba(29, 24, 14, 0.84);
+            box-shadow:
+                0 0 0 1px rgba(205, 166, 87, 0.14),
+                0 0 20px rgba(166, 123, 49, 0.2),
+                0 0 50px rgba(145, 105, 40, 0.1),
+                0 18px 45px rgba(0, 0, 0, 0.55);
+            transform: translateY(-2px);
+        }
+
+        .product-shot:focus-visible {
+            outline: none;
+        }
+
+        .product-shot img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 13px;
+            vertical-align: middle;
+            transition: filter 0.35s ease;
+        }
+
+        .product-shot:hover img {
+            filter: brightness(1.035) saturate(1.02);
+        }
+
+        .product-arrow {
+            position: relative;
+            flex-shrink: 0;
+            width: 42px;
+            height: 78px;
+            margin: 12px auto;
+        }
+
+        .product-arrow::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            bottom: 16px;
+            left: 50%;
+            width: 2px;
+            border-radius: 999px;
+            transform: translateX(-50%);
+            background: linear-gradient(to bottom,
+                rgba(180, 140, 64, 0),
+                rgba(198, 157, 78, 0.72) 24%,
+                rgba(224, 192, 122, 0.95) 70%,
+                rgba(180, 140, 64, 0.2));
+            box-shadow: 0 0 8px rgba(190, 146, 60, 0.36),
+                0 0 20px rgba(190, 146, 60, 0.12);
+            animation: arrowGlow 3.4s ease-in-out infinite;
+        }
+
+        .product-arrow::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 2px;
+            width: 11px;
+            height: 11px;
+            border-right: 2px solid #d1ad63;
+            border-bottom: 2px solid #d1ad63;
+            transform: translateX(-50%) rotate(45deg);
+            filter: drop-shadow(0 0 7px rgba(206, 165, 83, 0.55));
+            animation: arrowGlow 3.4s ease-in-out infinite;
+        }
+
+        @keyframes arrowGlow {
+            0%, 100% { opacity: 0.66; }
+            50% { opacity: 1; }
+        }
+
+        .back-btn.product-back {
+            flex-shrink: 0;
+            width: auto;
+            min-width: 190px;
+            margin-top: 14px;
         }
 
         #articlePage::-webkit-scrollbar,
@@ -241,6 +460,7 @@
 
         .download-btn,
         .article-btn,
+        .product-btn,
         .back-btn {
             display: inline-block;
             background: linear-gradient(to right, #333, #555);
@@ -263,6 +483,7 @@
 
         .download-btn:hover,
         .article-btn:hover,
+        .product-btn:hover,
         .back-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
@@ -271,6 +492,7 @@
 
         .download-btn i,
         .article-btn i,
+        .product-btn i,
         .back-btn i {
             font-size: 1.5rem;
         }
@@ -281,6 +503,20 @@
 
         .article-btn:hover {
             background: linear-gradient(to right, #5a5a5a, #7a7a7a);
+        }
+
+        .product-btn {
+            background: linear-gradient(to right, #3d3220, #6b5329);
+            border: 1px solid rgba(205, 167, 91, 0.3);
+        }
+
+        .product-btn:hover {
+            background: linear-gradient(to right, #4c3d25, #7d6130);
+            box-shadow: 0 8px 22px rgba(190, 147, 69, 0.2);
+        }
+
+        .product-btn i {
+            color: #d8b66d;
         }
 
         .footer {
@@ -434,6 +670,105 @@
             margin-top: 2px;
         }
 
+        /* ===== 产品图片放大预览 ===== */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: rgba(4, 5, 7, 0.9);
+            -webkit-backdrop-filter: blur(18px);
+            backdrop-filter: blur(18px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .lightbox.open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .lightbox-backdrop {
+            position: absolute;
+            inset: 0;
+            cursor: zoom-out;
+        }
+
+        .lightbox-image {
+            position: relative;
+            z-index: 1;
+            display: block;
+            max-width: 92vw;
+            max-height: 80vh;
+            width: auto;
+            height: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(212, 176, 100, 0.38);
+            box-shadow: 0 0 32px rgba(170, 128, 50, 0.16),
+                0 30px 90px rgba(0, 0, 0, 0.72);
+            transform: scale(0.965);
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .lightbox.open .lightbox-image {
+            transform: scale(1);
+        }
+
+        .lightbox-exit {
+            position: absolute;
+            left: 32px;
+            bottom: 28px;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 22px;
+            border-radius: 12px;
+            border: 1px solid rgba(205, 168, 92, 0.48);
+            background: rgba(24, 20, 12, 0.84);
+            color: #ecd39a;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45),
+                0 0 18px rgba(175, 132, 53, 0.12);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-exit:hover {
+            border-color: rgba(229, 194, 117, 0.85);
+            color: #fff2cf;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5),
+                0 0 26px rgba(196, 152, 66, 0.22);
+        }
+
+        .lightbox-exit:focus-visible {
+            outline: 2px solid rgba(226, 190, 112, 0.8);
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .background-animation,
+            .background-animation::before {
+                animation: none;
+            }
+
+            .product-arrow::before,
+            .product-arrow::after {
+                animation: none;
+            }
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 30px 20px;
@@ -442,7 +777,8 @@
                 font-size: 2.2rem;
             }
             .download-btn,
-            .article-btn {
+            .article-btn,
+            .product-btn {
                 font-size: 1.1rem;
                 padding: 14px 20px;
             }
@@ -474,6 +810,48 @@
             }
             #articlePage {
                 max-height: 70vh;
+            }
+            .container.product-mode {
+                max-width: 100%;
+            }
+            #productPage {
+                height: 76vh;
+                max-height: 76vh;
+                padding-top: 44px;
+            }
+            .product-title {
+                font-size: 1.8rem;
+            }
+            .product-hint {
+                font-size: 0.8rem;
+                margin-bottom: 10px;
+            }
+            .product-shot {
+                padding: 5px;
+                border-radius: 14px;
+            }
+            .product-shot img {
+                border-radius: 9px;
+            }
+            .product-arrow {
+                height: 62px;
+                margin: 9px auto;
+            }
+            .product-back {
+                margin-top: 10px;
+            }
+            .lightbox {
+                padding: 14px;
+            }
+            .lightbox-image {
+                max-width: 96vw;
+                max-height: 76vh;
+            }
+            .lightbox-exit {
+                left: 14px;
+                bottom: 14px;
+                padding: 10px 16px;
+                font-size: 0.9rem;
             }
             .language-selector-container {
                 top: 10px;
@@ -507,11 +885,16 @@
             .download-options {
                 gap: 15px;
             }
+            .product-arrow {
+                height: 56px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="background-animation" id="bgAnim"></div>
+    <div class="background-animation" id="bgAnim">
+        <canvas id="bgCanvas" aria-hidden="true"></canvas>
+    </div>
     <div class="container">
 
         <!-- 语言选择器（11种语言） -->
@@ -546,6 +929,7 @@
             <p class="subtitle" id="subtitleText">轻量级开发环境，点击下方按钮下载</p>
             <div class="btn-group">
                 <button class="download-btn" id="showDownloadBtn"><i class="fas fa-download"></i> <span id="downloadBtnText">下载</span></button>
+                <button class="product-btn" id="showProductBtn"><i class="fas fa-images"></i> <span id="productBtnText">产品介绍</span></button>
                 <button class="article-btn" id="showArticleBtn"><i class="fas fa-newspaper"></i> <span id="articleBtnText">文章</span></button>
             </div>
             <div class="footer" id="footerText">©2026 Duludulu AI · 小船党工作室</div>
@@ -556,7 +940,7 @@
             <h2 class="download-title" id="downloadTitle">选择版本</h2>
             <div class="download-options">
                 <!-- Windows -->
-                <a href="https://223-109-125-226-v3.pd1.cjjd19.com/user-other-free-download-cdn.123295.com/123-755/c6538072/4001552516-0/c6538072fd419cddbf0ba47c53f642f3/c-m12?t=1789561768&bzs=343030313535323531363a323a313a31303630393533333233&bi=2453406636&ur=vvagevgvmganu&urn=0&r=Q97YDE&bzc=1&bzp=0&v=5&s=178956176844456ef811c161ce518711094e195dc8&filename=Duludulu+IDE++of+Windows+2.0.rar&cache_type=2&x-mf-biz-cid=9d54c540-88e2-4e18-a785-bcd98859c194&auto_redirect=0&ndcp=1" target="_blank" class="download-option">
+                <a href="https://223-109-125-233-v3.pd1.cjjd19.com/user-other-free-download-cdn.123295.com/123-980/ce957931/4001552516-0/ce957931f0a361c912d812359e4777d4/c-m12?t=1794575290&bzc=1&bzs=343030313535323531363a323a313a363531353333383437&bi=1028011528&urn=0&d_r=unimn&d_v=2&r=80SO9U&v=5&bzp=0&ur=vvagevgvmgava&d_k=3ac2115d8cf532cfad5231f0b5f8bd644520017160234ae81cda63a059b1d8d9&s=1794575290402decbae20c42bfa6c019148656e963&filename=Duludulu+IDE+of+Windows+2.1.7z&cache_type=2&x-mf-biz-cid=16004301-4328-4b9e-9138-29e7a36b96da&auto_redirect=0&ndcp=1" target="_blank" class="download-option">
                     <div class="circle-btn">
                         <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/windows11/default.svg" alt="Windows11" width="24" height="24">
                     </div>
@@ -564,7 +948,7 @@
                     <div class="option-sub">.rar</div>
                 </a>
                 <!-- Linux -->
-                <a href="https://223-109-125-229-v3.pd1.cjjd19.com/user-other-free-download-cdn.123295.com/123-129/f16f94a6/4001552516-0/f16f94a60dd299ed7e43f86be2e38081/c-m42?r=YLGOLL&v=5&bzc=1&bzs=343030313535323531363a323a313a383831343235373330&bzp=0&bi=2453406636&t=1789561890&ur=vvagevgvmganu&urn=0&s=1789561890582167b17869914dc2094cd25c09a0d4&filename=Duludulu+IDE+of+Linux+2.0.tar.gz&cache_type=2&x-mf-biz-cid=d2c97e68-6ce6-48b0-8eac-52648bda4454&auto_redirect=0&ndcp=1" target="_blank" class="download-option">
+                <a href="https://223-109-125-233-v3.pd1.cjjd19.com/user-other-free-download-cdn.123295.com/123-764/b3aa270c/4001552516-0/b3aa270cb4bf94e28f07d006d36eeefc/c-m42?d_v=2&r=KP00T5&v=5&t=1794575404&bzc=1&bi=1028011528&ur=vvagevgvmgava&urn=0&d_r=unimn&bzs=343030313535323531363a323a313a333835363331323035&bzp=0&d_k=3ac2115d8cf532cfad5231f0b5f8bd644520017160234ae81cda63a059b1d8d9&s=1794575404e7349b8b86e014830ad1494e5dc8e12c&filename=Duludulu+IDE+of+Linux+2.1.tar.gz&cache_type=2&x-mf-biz-cid=51acbdf6-d513-4362-bd74-afa104e55f82&auto_redirect=0&ndcp=1" target="_blank" class="download-option">
                     <div class="circle-btn">
                         <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/linux/default.svg" alt="Linux" width="24" height="24">
                     </div>
@@ -583,6 +967,74 @@
             <button class="back-btn" id="backFromDownload"><i class="fas fa-arrow-left"></i> <span id="backDownloadText">返回</span></button>
         </div>
 
+        <!-- ===== 产品介绍页 ===== -->
+        <div id="productPage">
+            <h2 class="product-title" id="productTitle">产品介绍</h2>
+            <p class="product-hint" id="productHint">向下滚动浏览产品界面，点击任意图片可放大查看</p>
+            <div class="product-scroll" id="productScroll">
+                <div class="product-item">
+                    <button type="button" class="product-shot" aria-label="放大查看产品截图 1">
+                        <img src="1.png" alt="Duludulu IDE 产品介绍截图 1" width="1917" height="1078" loading="eager" decoding="async">
+                    </button>
+                    <div class="product-arrow" aria-hidden="true"></div>
+                </div>
+                <div class="product-item">
+                    <button type="button" class="product-shot" aria-label="放大查看产品截图 2">
+                        <img src="2.png" alt="Duludulu IDE 产品介绍截图 2" width="1917" height="1078" loading="lazy" decoding="async">
+                    </button>
+                    <div class="product-arrow" aria-hidden="true"></div>
+                </div>
+                <div class="product-item">
+                    <button type="button" class="product-shot" aria-label="放大查看产品截图 3">
+                        <img src="3.png" alt="Duludulu IDE 产品介绍截图 3" width="1917" height="1078" loading="lazy" decoding="async">
+                    </button>
+                    <div class="product-arrow" aria-hidden="true"></div>
+                </div>
+                <div class="product-item">
+                    <button type="button" class="product-shot" aria-label="放大查看产品截图 4">
+                        <img src="4.png" alt="Duludulu IDE 产品介绍截图 4" width="1917" height="1078" loading="lazy" decoding="async">
+                    </button>
+                    <div class="product-arrow" aria-hidden="true"></div>
+                </div>
+                <div class="product-item">
+                    <button type="button" class="product-shot" aria-label="放大查看产品截图 5">
+                        <img src="5.png" alt="Duludulu IDE 产品介绍截图 5" width="1917" height="1078" loading="lazy" decoding="async">
+                    </button>
+                    <div class="product-arrow" aria-hidden="true"></div>
+                </div>
+                <div class="product-item">
+                    <button type="button" class="product-shot" aria-label="放大查看产品截图 6">
+                        <img src="6.png" alt="Duludulu IDE 产品介绍截图 6" width="1917" height="1078" loading="lazy" decoding="async">
+                    </button>
+                    <div class="product-arrow" aria-hidden="true"></div>
+                </div>
+                <div class="product-item">
+                    <button type="button" class="product-shot" aria-label="放大查看产品截图 7">
+                        <img src="7.png" alt="Duludulu IDE 产品介绍截图 7" width="1917" height="1078" loading="lazy" decoding="async">
+                    </button>
+                    <div class="product-arrow" aria-hidden="true"></div>
+                </div>
+                <div class="product-item">
+                    <button type="button" class="product-shot" aria-label="放大查看产品截图 8">
+                        <img src="8.png" alt="Duludulu IDE 产品介绍截图 8" width="1917" height="1078" loading="lazy" decoding="async">
+                    </button>
+                    <div class="product-arrow" aria-hidden="true"></div>
+                </div>
+                <div class="product-item">
+                    <button type="button" class="product-shot" aria-label="放大查看产品截图 9">
+                        <img src="9.png" alt="Duludulu IDE 产品介绍截图 9" width="1917" height="1078" loading="lazy" decoding="async">
+                    </button>
+                    <div class="product-arrow" aria-hidden="true"></div>
+                </div>
+                <div class="product-item">
+                    <button type="button" class="product-shot" aria-label="放大查看产品截图 10">
+                        <img src="10.png" alt="Duludulu IDE 产品介绍截图 10" width="1917" height="1078" loading="lazy" decoding="async">
+                    </button>
+                </div>
+            </div>
+            <button class="back-btn product-back" id="backFromProduct"><i class="fas fa-arrow-left"></i> <span id="backProductText">返回主页</span></button>
+        </div>
+
         <!-- ===== 文章页 ===== -->
         <div id="articlePage">
             <div class="article-text" id="articleContent">
@@ -596,6 +1048,16 @@
             <button class="back-btn" id="backHomeBtn"><i class="fas fa-arrow-left"></i> <span id="backBtnText">返回主页</span></button>
         </div>
 
+    </div>
+
+    <!-- ===== 产品图片放大预览 ===== -->
+    <div class="lightbox" id="imageLightbox" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+        <img class="lightbox-image" id="lightboxImage" src="" alt="">
+        <button class="lightbox-exit" id="lightboxExit" type="button">
+            <i class="fas fa-arrow-left"></i>
+            <span id="exitPreviewText">退出</span>
+        </button>
     </div>
 
     <script>
@@ -747,20 +1209,48 @@
                 }
             };
 
+            // 产品介绍页与图片放大层的补充文案
+            const uiText = {
+                zh: { productBtn: "产品介绍", productHint: "向下滚动浏览产品界面，点击任意图片可放大查看", exitPreview: "退出" },
+                en: { productBtn: "Product Tour", productHint: "Scroll down to explore the product. Click any image to enlarge it.", exitPreview: "Exit" },
+                de: { productBtn: "Produktübersicht", productHint: "Scrollen Sie nach unten, um die Produktoberfläche zu erkunden. Klicken Sie auf ein Bild, um es zu vergrößern.", exitPreview: "Beenden" },
+                fr: { productBtn: "Présentation du produit", productHint: "Faites défiler pour découvrir le produit. Cliquez sur une image pour l'agrandir.", exitPreview: "Quitter" },
+                ru: { productBtn: "Обзор продукта", productHint: "Прокрутите вниз, чтобы посмотреть интерфейс продукта. Нажмите на изображение, чтобы увеличить его.", exitPreview: "Выйти" },
+                pt: { productBtn: "Visão do produto", productHint: "Role para baixo para conhecer o produto. Clique em qualquer imagem para ampliá-la.", exitPreview: "Sair" },
+                es: { productBtn: "Descripción del producto", productHint: "Desplázate hacia abajo para conocer el producto. Haz clic en cualquier imagen para ampliarla.", exitPreview: "Salir" },
+                ja: { productBtn: "製品紹介", productHint: "下にスクロールして製品画面をご覧ください。画像をクリックすると拡大できます。", exitPreview: "終了" },
+                ko: { productBtn: "제품 소개", productHint: "아래로 스크롤하여 제품 화면을 살펴보세요. 이미지를 클릭하면 확대됩니다.", exitPreview: "나가기" },
+                ar: { productBtn: "نظرة عامة على المنتج", productHint: "مرر لأسفل لاستعراض واجهات المنتج. انقر على أي صورة لتكبيرها.", exitPreview: "خروج" },
+                hi: { productBtn: "उत्पाद परिचय", productHint: "उत्पाद की स्क्रीन देखने के लिए नीचे स्क्रॉल करें। किसी भी छवि पर क्लिक करके उसे बड़ा करें।", exitPreview: "बाहर निकलें" }
+            };
+
             // ===== DOM 引用 =====
             const homePage = document.getElementById('homePage');
             const articlePage = document.getElementById('articlePage');
             const downloadPage = document.getElementById('downloadPage');
+            const productPage = document.getElementById('productPage');
+            const productScroll = document.getElementById('productScroll');
+            const shell = document.querySelector('.container');
+            const lightbox = document.getElementById('imageLightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxExit = document.getElementById('lightboxExit');
+            const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+            let lastPreviewTrigger = null;
 
             const elements = {
                 title: document.getElementById('pageTitle'),
                 subtitle: document.getElementById('subtitleText'),
                 downloadBtn: document.getElementById('downloadBtnText'),
+                productBtn: document.getElementById('productBtnText'),
+                productTitle: document.getElementById('productTitle'),
+                productHint: document.getElementById('productHint'),
                 articleBtn: document.getElementById('articleBtnText'),
                 footer: document.getElementById('footerText'),
                 downloadTitle: document.getElementById('downloadTitle'),
                 backDownload: document.getElementById('backDownloadText'),
                 backHome: document.getElementById('backBtnText'),
+                backProduct: document.getElementById('backProductText'),
+                exitPreview: document.getElementById('exitPreviewText'),
                 articleP1: document.getElementById('articleP1'),
                 articleP2: document.getElementById('articleP2'),
                 articleP3: document.getElementById('articleP3')
@@ -769,14 +1259,20 @@
             // ===== 语言切换函数 =====
             function setLanguage(lang) {
                 const t = translations[lang] || translations.zh;
+                const extra = uiText[lang] || uiText.zh;
                 elements.title.textContent = t.title;
                 elements.subtitle.textContent = t.subtitle;
                 elements.downloadBtn.textContent = t.downloadBtn;
+                elements.productBtn.textContent = extra.productBtn;
+                elements.productTitle.textContent = extra.productBtn;
+                elements.productHint.textContent = extra.productHint;
                 elements.articleBtn.textContent = t.articleBtn;
                 elements.footer.textContent = t.footer;
                 elements.downloadTitle.textContent = t.downloadTitle;
                 elements.backDownload.textContent = t.backDownload;
                 elements.backHome.textContent = t.backHome;
+                elements.backProduct.textContent = t.backHome;
+                elements.exitPreview.textContent = extra.exitPreview;
                 // 文章三段
                 elements.articleP1.textContent = t.articleP1;
                 elements.articleP2.textContent = t.articleP2;
@@ -812,11 +1308,21 @@
                 homePage.style.display = 'none';
                 articlePage.style.display = 'none';
                 downloadPage.style.display = 'none';
+                productPage.style.display = 'none';
                 page.style.display = 'flex';
+                shell.classList.toggle('product-mode', page === productPage);
+
+                if (page === productPage) {
+                    productScroll.scrollTop = 0;
+                }
             }
 
             document.getElementById('showDownloadBtn').addEventListener('click', function() {
                 showPage(downloadPage);
+            });
+
+            document.getElementById('showProductBtn').addEventListener('click', function() {
+                showPage(productPage);
             });
 
             document.getElementById('showArticleBtn').addEventListener('click', function() {
@@ -828,25 +1334,818 @@
                 showPage(homePage);
             });
 
+            document.getElementById('backFromProduct').addEventListener('click', function() {
+                showPage(homePage);
+            });
+
             document.getElementById('backHomeBtn').addEventListener('click', function() {
                 showPage(homePage);
             });
 
-            // ===== 背景动画 =====
-            const bg = document.getElementById('bgAnim');
-            const gradients = [
-                'linear-gradient(135deg,#e8e8e8 0%,#1a1a1a 100%)',
-                'linear-gradient(135deg,#d0d0d0 0%,#0a0a0a 100%)',
-                'linear-gradient(135deg,#f0f0f0 0%,#151515 100%)',
-                'linear-gradient(135deg,#c8c8c8 0%,#050505 100%)',
-                'linear-gradient(135deg,#e0e0e0 0%,#0a0a0a 100%)'
-            ];
-            let idx = 0;
-            bg.style.background = gradients[0];
-            setInterval(() => {
-                idx = (idx + 1) % gradients.length;
-                bg.style.background = gradients[idx];
-            }, 8000);
+            // ===== 产品图片放大预览 =====
+            function openLightbox(image, trigger) {
+                lightboxImage.src = image.currentSrc || image.src;
+                lightboxImage.alt = image.alt;
+                lastPreviewTrigger = trigger;
+                lightbox.classList.add('open');
+                lightbox.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('lightbox-open');
+                lightboxExit.focus({ preventScroll: true });
+            }
+
+            function closeLightbox() {
+                if (!lightbox.classList.contains('open')) return;
+
+                lightbox.classList.remove('open');
+                lightbox.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('lightbox-open');
+
+                if (lastPreviewTrigger) {
+                    lastPreviewTrigger.focus({ preventScroll: true });
+                    lastPreviewTrigger = null;
+                }
+            }
+
+            document.querySelectorAll('.product-shot').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const image = button.querySelector('img');
+                    if (image) {
+                        openLightbox(image, button);
+                    }
+                });
+            });
+
+            lightboxExit.addEventListener('click', closeLightbox);
+            lightboxBackdrop.addEventListener('click', closeLightbox);
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && lightbox.classList.contains('open')) {
+                    event.preventDefault();
+                    closeLightbox();
+                }
+            });
+
+            // ===== 背景动画：流动渐变 + 可交互的随机三维几何体 =====
+            (function initGeometryBackground() {
+                const canvas = document.getElementById('bgCanvas');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+
+                canvas.dataset.grabbing = 'false';
+
+                const TAU = Math.PI * 2;
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const clamp = (value, min, max) => value < min ? min : value > max ? max : value;
+                const rand = (min, max) => min + Math.random() * (max - min);
+                const normalize3 = (vector) => {
+                    const length = Math.hypot(vector[0], vector[1], vector[2]) || 1;
+                    return [vector[0] / length, vector[1] / length, vector[2] / length];
+                };
+
+                // 以正二十面体为骨架，细分后得到低多边形水晶网格
+                const PHI = (1 + Math.sqrt(5)) / 2;
+                const baseVerts = [
+                    [-1, PHI, 0], [1, PHI, 0], [-1, -PHI, 0], [1, -PHI, 0],
+                    [0, -1, PHI], [0, 1, PHI], [0, -1, -PHI], [0, 1, -PHI],
+                    [PHI, 0, -1], [PHI, 0, 1], [-PHI, 0, -1], [-PHI, 0, 1]
+                ].map(normalize3);
+
+                const baseFaces = [
+                    [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11],
+                    [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8],
+                    [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9],
+                    [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]
+                ];
+
+                function subdivideOnce(geometry) {
+                    const verts = geometry.verts;
+                    const faces = geometry.faces;
+                    const nextVerts = verts.slice();
+                    const nextFaces = [];
+                    const midpoints = new Map();
+
+                    function midpoint(a, b) {
+                        const key = a < b ? a + '_' + b : b + '_' + a;
+                        const cached = midpoints.get(key);
+                        if (cached !== undefined) return cached;
+
+                        const va = verts[a];
+                        const vb = verts[b];
+                        const index = nextVerts.length;
+                        nextVerts.push(normalize3([
+                            va[0] + vb[0],
+                            va[1] + vb[1],
+                            va[2] + vb[2]
+                        ]));
+                        midpoints.set(key, index);
+                        return index;
+                    }
+
+                    for (const [a, b, c] of faces) {
+                        const ab = midpoint(a, b);
+                        const bc = midpoint(b, c);
+                        const ca = midpoint(c, a);
+                        nextFaces.push(
+                            [a, ab, ca],
+                            [b, bc, ab],
+                            [c, ca, bc],
+                            [ab, bc, ca]
+                        );
+                    }
+
+                    return { verts: nextVerts, faces: nextFaces };
+                }
+
+                let geometry = { verts: baseVerts, faces: baseFaces };
+                const detail = window.innerWidth < 680 ? 1 : 2;
+                for (let level = 0; level < detail; level++) {
+                    geometry = subdivideOnce(geometry);
+                }
+
+                const verts = geometry.verts;
+                const faces = geometry.faces;
+                const vertexCount = verts.length;
+                const edges = [];
+                const edgeKeys = new Set();
+
+                for (const [a, b, c] of faces) {
+                    for (const [from, to] of [[a, b], [b, c], [c, a]]) {
+                        const key = from < to ? from + '_' + to : to + '_' + from;
+                        if (!edgeKeys.has(key)) {
+                            edgeKeys.add(key);
+                            edges.push([from, to]);
+                        }
+                    }
+                }
+
+                const currentRadii = new Float32Array(vertexCount);
+                const targetRadii = new Float32Array(vertexCount);
+                const radiusVelocity = new Float32Array(vertexCount);
+                const wobblePhase = new Float32Array(vertexCount);
+                const restX = new Float32Array(vertexCount);
+                const restY = new Float32Array(vertexCount);
+                const pointX = new Float32Array(vertexCount);
+                const pointY = new Float32Array(vertexCount);
+                const pointZ = new Float32Array(vertexCount);
+                const deformX = new Float32Array(vertexCount);
+                const deformY = new Float32Array(vertexCount);
+                const deformVelocityX = new Float32Array(vertexCount);
+                const deformVelocityY = new Float32Array(vertexCount);
+                const deformTargetX = new Float32Array(vertexCount);
+                const deformTargetY = new Float32Array(vertexCount);
+                const grabWeights = new Float32Array(vertexCount);
+
+                for (let i = 0; i < vertexCount; i++) {
+                    currentRadii[i] = 1;
+                    targetRadii[i] = 1;
+                    wobblePhase[i] = Math.random() * TAU;
+                }
+
+                let W = 0;
+                let H = 0;
+                let dpr = 1;
+                let centerX = 0;
+                let centerY = 0;
+                let radius = 300;
+
+                let hue = 205;
+                let targetHue = 205;
+                let tilt = 0.3;
+                let targetTilt = 0.3;
+                let roll = -0.08;
+                let targetRoll = -0.08;
+                let shapeScale = 1;
+                let targetShapeScale = 1;
+                let spinY = 0.22;
+                let targetSpinY = 0.22;
+                let angleY = 0.55;
+                let aniso = [1, 1, 1];
+                let targetAniso = [1, 1, 1];
+                let shapeTimer = 5;
+
+                let elapsed = 0;
+                let rafId = 0;
+                let lastTime = performance.now();
+
+                const pointer = {
+                    x: 0,
+                    y: 0,
+                    targetX: 0,
+                    targetY: 0,
+                    clientX: 0,
+                    clientY: 0,
+                    active: false,
+                    overUI: false
+                };
+                let hoverIndex = -1;
+                let grabIndex = -1;
+                let grabCooldown = 0;
+                let grabStartedAt = 0;
+
+                const container = document.querySelector('.container');
+                let containerRect = container
+                    ? container.getBoundingClientRect()
+                    : { left: 0, top: 0, right: 0, bottom: 0 };
+
+                const dust = Array.from({ length: 60 }, () => ({
+                    x: Math.random(),
+                    y: Math.random(),
+                    size: rand(0.35, 1.65),
+                    speed: rand(0.25, 1.1),
+                    phase: Math.random() * TAU,
+                    alpha: rand(0.08, 0.42)
+                }));
+
+                function randomDirection() {
+                    const y = rand(-1, 1);
+                    const theta = Math.random() * TAU;
+                    const horizontal = Math.sqrt(1 - y * y);
+                    return [
+                        Math.cos(theta) * horizontal,
+                        y,
+                        Math.sin(theta) * horizontal
+                    ];
+                }
+
+                function createRandomShape() {
+                    const modes = [{
+                        dir: randomDirection(),
+                        freq: rand(1.05, 1.8),
+                        phase: Math.random() * TAU,
+                        amp: rand(0.18, 0.32)
+                    }];
+                    const modeCount = 3 + Math.floor(Math.random() * 5);
+
+                    for (let i = 0; i < modeCount; i++) {
+                        modes.push({
+                            dir: randomDirection(),
+                            freq: rand(1.3, 3.8),
+                            phase: Math.random() * TAU,
+                            amp: rand(0.06, 0.18)
+                        });
+                    }
+
+                    const spikes = [];
+                    const spikeCount = Math.random() < 0.18 ? 0 : 1 + Math.floor(Math.random() * 3);
+                    for (let i = 0; i < spikeCount; i++) {
+                        spikes.push({
+                            dir: randomDirection(),
+                            amp: rand(0.26, 0.62),
+                            power: rand(3, 9)
+                        });
+                    }
+
+                    const radii = new Float32Array(vertexCount);
+                    let mean = 0;
+
+                    for (let i = 0; i < vertexCount; i++) {
+                        const vertex = verts[i];
+                        let value = 1;
+
+                        for (const mode of modes) {
+                            const projection =
+                                vertex[0] * mode.dir[0] +
+                                vertex[1] * mode.dir[1] +
+                                vertex[2] * mode.dir[2];
+                            value += mode.amp * Math.sin(projection * mode.freq + mode.phase);
+                        }
+
+                        for (const spike of spikes) {
+                            const projection = Math.max(0,
+                                vertex[0] * spike.dir[0] +
+                                vertex[1] * spike.dir[1] +
+                                vertex[2] * spike.dir[2]
+                            );
+                            value += spike.amp * Math.pow(projection, spike.power);
+                        }
+
+                        value = clamp(value, 0.46, 1.82);
+                        radii[i] = value;
+                        mean += value;
+                    }
+
+                    mean /= vertexCount;
+                    if (mean > 0) {
+                        for (let i = 0; i < vertexCount; i++) {
+                            radii[i] /= mean;
+                        }
+                    }
+
+                    const shapeAniso = [rand(0.74, 1.26), rand(0.74, 1.26), rand(0.74, 1.26)];
+                    const anisoMean = (shapeAniso[0] + shapeAniso[1] + shapeAniso[2]) / 3;
+                    for (let i = 0; i < 3; i++) {
+                        shapeAniso[i] /= anisoMean;
+                    }
+
+                    const palette = [190, 200, 212, 224, 238, 255, 272, 286];
+                    const shapeHue = palette[Math.floor(Math.random() * palette.length)] + rand(-8, 8);
+
+                    return {
+                        radii,
+                        aniso: shapeAniso,
+                        hue: shapeHue,
+                        tilt: rand(-0.7, 0.7),
+                        roll: rand(-0.2, 0.2),
+                        scale: rand(0.94, 1.09),
+                        spin: rand(0.13, 0.3)
+                    };
+                }
+
+                function pickShape(instant) {
+                    const shape = createRandomShape();
+                    targetRadii.set(shape.radii);
+                    targetAniso = shape.aniso;
+                    targetHue = shape.hue;
+                    targetTilt = shape.tilt;
+                    targetRoll = shape.roll;
+                    targetShapeScale = shape.scale;
+                    targetSpinY = shape.spin;
+                    shapeTimer = rand(4.2, 6);
+
+                    if (instant) {
+                        currentRadii.set(shape.radii);
+                        radiusVelocity.fill(0);
+                        aniso = shape.aniso.slice();
+                        hue = shape.hue;
+                        targetHue = shape.hue;
+                        tilt = shape.tilt;
+                        targetTilt = shape.tilt;
+                        roll = shape.roll;
+                        targetRoll = shape.roll;
+                        shapeScale = shape.scale;
+                        targetShapeScale = shape.scale;
+                        spinY = shape.spin;
+                        targetSpinY = shape.spin;
+                    }
+                }
+
+                function refreshContainerRect() {
+                    if (container) {
+                        containerRect = container.getBoundingClientRect();
+                    }
+                }
+
+                function isInsideContainer(x, y) {
+                    const margin = 4;
+                    return x >= containerRect.left - margin &&
+                        x <= containerRect.right + margin &&
+                        y >= containerRect.top - margin &&
+                        y <= containerRect.bottom + margin;
+                }
+
+                function beginGrab(index) {
+                    if (grabIndex >= 0 || index < 0) return;
+
+                    grabIndex = index;
+                    hoverIndex = index;
+                    grabStartedAt = elapsed;
+                    canvas.dataset.grabbing = 'true';
+
+                    const grabbed = verts[index];
+                    for (let i = 0; i < vertexCount; i++) {
+                        const other = verts[i];
+                        const dot = clamp(
+                            grabbed[0] * other[0] +
+                            grabbed[1] * other[1] +
+                            grabbed[2] * other[2],
+                            -1,
+                            1
+                        );
+                        const angle = Math.acos(dot);
+                        const influence = 1.12;
+                        let weight = clamp(1 - angle / influence, 0, 1);
+                        weight = weight * weight * (3 - 2 * weight);
+                        grabWeights[i] = weight + 0.035 * clamp(1 - angle / Math.PI, 0, 1);
+                    }
+                    grabWeights[index] = 1;
+                }
+
+                function releaseGrab() {
+                    if (grabIndex < 0) return;
+                    grabIndex = -1;
+                    grabCooldown = 0.24;
+                    hoverIndex = -1;
+                    shapeTimer = Math.max(shapeTimer, 2.2);
+                    canvas.dataset.grabbing = 'false';
+                }
+
+                function nearestVertexToPointer() {
+                    if (!pointer.active || pointer.overUI) return -1;
+
+                    const hitRadius = Math.max(20, Math.min(38, radius * 0.075));
+                    let nearest = -1;
+                    let nearestDistance = hitRadius * hitRadius;
+
+                    for (let i = 0; i < vertexCount; i++) {
+                        const x = pointX[i];
+                        const y = pointY[i];
+                        if (x < 0 || x > W || y < 0 || y > H) continue;
+                        if (isInsideContainer(x, y)) continue;
+
+                        const dx = x - pointer.clientX;
+                        const dy = y - pointer.clientY;
+                        const distance = dx * dx + dy * dy;
+                        if (distance < nearestDistance) {
+                            nearestDistance = distance;
+                            nearest = i;
+                        }
+                    }
+
+                    return nearest;
+                }
+
+                function updateInteraction(dt) {
+                    grabCooldown = Math.max(0, grabCooldown - dt);
+
+                    if (document.body.classList.contains('lightbox-open')) {
+                        hoverIndex = -1;
+                        releaseGrab();
+                        return;
+                    }
+
+                    pointer.overUI = isInsideContainer(pointer.clientX, pointer.clientY);
+
+                    if (!pointer.active || pointer.overUI) {
+                        hoverIndex = -1;
+                        releaseGrab();
+                        return;
+                    }
+
+                    if (grabIndex >= 0) {
+                        hoverIndex = grabIndex;
+                    } else {
+                        hoverIndex = -1;
+                    }
+                }
+
+                function updateDeformation(dt) {
+                    if (grabIndex >= 0) {
+                        let dx = pointer.clientX - restX[grabIndex];
+                        let dy = pointer.clientY - restY[grabIndex];
+                        const maxPull = Math.max(64, radius * 0.62);
+                        const distance = Math.hypot(dx, dy);
+
+                        if (distance > maxPull * 1.3) {
+                            releaseGrab();
+                        } else {
+                            if (distance > maxPull) {
+                                const scale = maxPull / distance;
+                                dx *= scale;
+                                dy *= scale;
+                            }
+                            for (let i = 0; i < vertexCount; i++) {
+                                deformTargetX[i] = dx * grabWeights[i];
+                                deformTargetY[i] = dy * grabWeights[i];
+                            }
+                        }
+                    }
+
+                    if (grabIndex < 0) {
+                        deformTargetX.fill(0);
+                        deformTargetY.fill(0);
+                    }
+
+                    const stiffness = 300;
+                    const damping = 24;
+
+                    for (let i = 0; i < vertexCount; i++) {
+                        deformVelocityX[i] += (
+                            (deformTargetX[i] - deformX[i]) * stiffness -
+                            deformVelocityX[i] * damping
+                        ) * dt;
+                        deformVelocityY[i] += (
+                            (deformTargetY[i] - deformY[i]) * stiffness -
+                            deformVelocityY[i] * damping
+                        ) * dt;
+                        deformX[i] += deformVelocityX[i] * dt;
+                        deformY[i] += deformVelocityY[i] * dt;
+                    }
+                }
+
+                function resize() {
+                    W = window.innerWidth;
+                    H = window.innerHeight;
+                    dpr = Math.min(window.devicePixelRatio || 1, 2);
+                    canvas.width = Math.max(1, Math.round(W * dpr));
+                    canvas.height = Math.max(1, Math.round(H * dpr));
+                    canvas.style.width = W + 'px';
+                    canvas.style.height = H + 'px';
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    centerX = W * 0.5;
+                    centerY = H * 0.5;
+                    radius = Math.min(W, H) * (W < 680 ? 0.66 : 0.46);
+                    refreshContainerRect();
+                    if (reduceMotion) draw();
+                }
+
+                function update(dt) {
+                    const hueEase = 1 - Math.exp(-dt * 0.85);
+                    const ease = 1 - Math.exp(-dt * 1.55);
+
+                    if (grabIndex < 0) {
+                        shapeTimer -= dt;
+                        if (shapeTimer <= 0) pickShape(false);
+
+                        // 每个顶点用弹簧追赶目标形态，形变会带着惯性自然过渡
+                        for (let i = 0; i < vertexCount; i++) {
+                            const acceleration =
+                                (targetRadii[i] - currentRadii[i]) * 7.6 -
+                                radiusVelocity[i] * 4.4;
+                            radiusVelocity[i] += acceleration * dt;
+                            currentRadii[i] += radiusVelocity[i] * dt;
+                        }
+
+                        for (let i = 0; i < 3; i++) {
+                            aniso[i] += (targetAniso[i] - aniso[i]) * ease;
+                        }
+
+                        tilt += (targetTilt - tilt) * ease;
+                        roll += (targetRoll - roll) * ease;
+                        shapeScale += (targetShapeScale - shapeScale) * ease;
+                        spinY += (targetSpinY - spinY) * ease;
+                    }
+
+                    angleY += spinY * dt * (grabIndex >= 0 ? 0.12 : 1);
+
+                    const hueDelta = ((targetHue - hue + 540) % 360) - 180;
+                    hue = (hue + hueDelta * hueEase + 360) % 360;
+
+                    updateInteraction(dt);
+                    updateDeformation(dt);
+                }
+
+                function draw() {
+                    if (!W || !H) return;
+
+                    ctx.clearRect(0, 0, W, H);
+
+                    pointer.x += (pointer.targetX - pointer.x) * 0.045;
+                    pointer.y += (pointer.targetY - pointer.y) * 0.045;
+
+                    const parallax = Math.min(W, H) * 0.03;
+                    const originX = centerX + pointer.x * parallax;
+                    const originY = centerY + pointer.y * parallax * 0.8;
+
+                    // 柔光光晕
+                    const auraRadius = radius * 1.9;
+                    const aura = ctx.createRadialGradient(
+                        originX, originY, radius * 0.08,
+                        originX, originY, auraRadius
+                    );
+                    aura.addColorStop(0, `hsla(${hue}, 72%, 62%, 0.11)`);
+                    aura.addColorStop(0.36, `hsla(${hue}, 72%, 55%, 0.05)`);
+                    aura.addColorStop(1, `hsla(${hue}, 72%, 50%, 0)`);
+                    ctx.fillStyle = aura;
+                    ctx.beginPath();
+                    ctx.arc(originX, originY, auraRadius, 0, TAU);
+                    ctx.fill();
+
+                    // 缓慢漂浮的微尘
+                    for (const mote of dust) {
+                        const x = ((mote.x + elapsed * 0.0035 * mote.speed) % 1 + 1) % 1;
+                        const y = ((mote.y - elapsed * 0.0022 * mote.speed) % 1 + 1) % 1;
+                        const twinkle = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(elapsed * 0.8 + mote.phase));
+                        ctx.beginPath();
+                        ctx.arc(x * W, y * H, mote.size, 0, TAU);
+                        ctx.fillStyle = `hsla(${hue}, 42%, 88%, ${mote.alpha * twinkle})`;
+                        ctx.fill();
+                    }
+
+                    const viewTilt = tilt + Math.sin(elapsed * 0.32) * 0.16;
+                    const viewRoll = roll + Math.sin(elapsed * 0.21) * 0.08;
+                    const cosY = Math.cos(angleY);
+                    const sinY = Math.sin(angleY);
+                    const cosX = Math.cos(viewTilt);
+                    const sinX = Math.sin(viewTilt);
+                    const cosZ = Math.cos(viewRoll);
+                    const sinZ = Math.sin(viewRoll);
+                    const pulse = 1 + Math.sin(elapsed * 0.6) * 0.015;
+                    const projectionScale = radius * shapeScale * pulse;
+
+                    for (let i = 0; i < vertexCount; i++) {
+                        const vertex = verts[i];
+                        const wobble = 1 +
+                            Math.sin(elapsed * 0.92 + wobblePhase[i]) * 0.018 +
+                            Math.sin(elapsed * 1.63 + wobblePhase[i] * 1.3) * 0.007;
+                        const currentRadius = currentRadii[i] * wobble;
+
+                        const x = vertex[0] * currentRadius * aniso[0];
+                        const y = vertex[1] * currentRadius * aniso[1];
+                        const z = vertex[2] * currentRadius * aniso[2];
+
+                        const x1 = x * cosY + z * sinY;
+                        const z1 = -x * sinY + z * cosY;
+
+                        const y2 = y * cosX - z1 * sinX;
+                        const z2 = y * sinX + z1 * cosX;
+
+                        const x3 = x1 * cosZ - y2 * sinZ;
+                        const y3 = x1 * sinZ + y2 * cosZ;
+
+                        const perspective = 1 / (1 - z2 * 0.17);
+                        restX[i] = originX + x3 * projectionScale * perspective;
+                        restY[i] = originY - y3 * projectionScale * perspective;
+                        pointX[i] = restX[i] + deformX[i];
+                        pointY[i] = restY[i] + deformY[i];
+                        pointZ[i] = z2;
+                    }
+
+                    const orderedFaces = [];
+                    for (let i = 0; i < faces.length; i++) {
+                        const [a, b, c] = faces[i];
+                        orderedFaces.push({
+                            a, b, c,
+                            z: (pointZ[a] + pointZ[b] + pointZ[c]) / 3
+                        });
+                    }
+                    orderedFaces.sort((first, second) => first.z - second.z);
+
+                    // 半透明切面，让低多边形晶体具有体积感
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'lighter';
+                    for (const face of orderedFaces) {
+                        const depth = clamp((face.z + 1.5) / 3, 0, 1);
+                        const alpha = (0.009 + depth * 0.038) * (detail > 1 ? 0.78 : 1);
+                        ctx.beginPath();
+                        ctx.moveTo(pointX[face.a], pointY[face.a]);
+                        ctx.lineTo(pointX[face.b], pointY[face.b]);
+                        ctx.lineTo(pointX[face.c], pointY[face.c]);
+                        ctx.closePath();
+                        ctx.fillStyle = `hsla(${hue}, 64%, ${30 + depth * 30}%, ${alpha})`;
+                        ctx.fill();
+                    }
+                    ctx.restore();
+
+                    // 按深度分三组描边，近处更亮
+                    const bands = [
+                        { min: -Infinity, max: -0.32, alpha: 0.09, width: 0.8, glow: 0 },
+                        { min: -0.32, max: 0.34, alpha: 0.21, width: 1, glow: 0 },
+                        { min: 0.34, max: Infinity, alpha: 0.5, width: 1.2, glow: 14 }
+                    ];
+
+                    ctx.save();
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+
+                    for (const band of bands) {
+                        ctx.beginPath();
+                        for (const [a, b] of edges) {
+                            const depth = (pointZ[a] + pointZ[b]) / 2;
+                            if (depth < band.min || depth > band.max) continue;
+                            ctx.moveTo(pointX[a], pointY[a]);
+                            ctx.lineTo(pointX[b], pointY[b]);
+                        }
+                        ctx.strokeStyle = `hsla(${hue}, 55%, 88%, ${band.alpha})`;
+                        ctx.lineWidth = band.width;
+                        if (band.glow) {
+                            ctx.shadowColor = `hsla(${hue}, 80%, 70%, 0.75)`;
+                            ctx.shadowBlur = band.glow;
+                        } else {
+                            ctx.shadowBlur = 0;
+                        }
+                        ctx.stroke();
+                    }
+
+                    ctx.restore();
+
+                    // 顶点微光
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'lighter';
+                    for (let i = 0; i < vertexCount; i += 4) {
+                        if (pointZ[i] < 0.5) continue;
+                        ctx.beginPath();
+                        ctx.arc(pointX[i], pointY[i], 1.1, 0, TAU);
+                        ctx.fillStyle = `hsla(${hue}, 78%, 92%, 0.5)`;
+                        ctx.fill();
+                    }
+                    ctx.restore();
+
+                    // 抓取反馈：被鼠标带住的角会亮起一个小光环
+                    const highlighted = grabIndex >= 0 ? grabIndex : hoverIndex;
+                    if (highlighted >= 0) {
+                        const grabbing = grabIndex >= 0;
+                        const x = pointX[highlighted];
+                        const y = pointY[highlighted];
+                        const pulse = 0.5 + 0.5 * Math.sin(elapsed * 4.2);
+                        const age = grabbing ? Math.min(elapsed - grabStartedAt, 0.4) : 0;
+                        const ringRadius = (grabbing ? 7.5 : 6) + pulse * 1.8 + age * 6;
+
+                        ctx.save();
+                        ctx.globalCompositeOperation = 'lighter';
+                        ctx.strokeStyle = `hsla(${hue}, 88%, 92%, ${grabbing ? 0.8 : 0.45})`;
+                        ctx.lineWidth = 1.2;
+                        ctx.shadowColor = `hsla(${hue}, 90%, 75%, 0.8)`;
+                        ctx.shadowBlur = 10;
+                        ctx.beginPath();
+                        ctx.arc(x, y, ringRadius, 0, TAU);
+                        ctx.stroke();
+
+                        ctx.globalAlpha = grabbing ? 0.28 : 0.16;
+                        ctx.beginPath();
+                        ctx.arc(x, y, ringRadius + 5, 0, TAU);
+                        ctx.stroke();
+
+                        ctx.globalAlpha = 1;
+                        ctx.fillStyle = `hsla(${hue}, 92%, 95%, ${grabbing ? 0.95 : 0.6})`;
+                        ctx.beginPath();
+                        ctx.arc(x, y, grabbing ? 2.2 : 1.6, 0, TAU);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                }
+
+                function frame(now) {
+                    if (document.hidden) {
+                        rafId = 0;
+                        return;
+                    }
+
+                    const dt = Math.min(Math.max((now - lastTime) / 1000, 0), 0.05);
+                    lastTime = now;
+                    elapsed += dt;
+                    update(dt);
+                    draw();
+                    rafId = requestAnimationFrame(frame);
+                }
+
+                function start() {
+                    if (reduceMotion || rafId) return;
+                    lastTime = performance.now();
+                    rafId = requestAnimationFrame(frame);
+                }
+
+                function handlePointer(event) {
+                    if (document.body.classList.contains('lightbox-open')) {
+                        pointer.active = false;
+                        releaseGrab();
+                        return;
+                    }
+
+                    pointer.clientX = event.clientX;
+                    pointer.clientY = event.clientY;
+                    pointer.targetX = (event.clientX / Math.max(W, 1) - 0.5) * 2;
+                    pointer.targetY = (event.clientY / Math.max(H, 1) - 0.5) * 2;
+                    pointer.active = true;
+                    pointer.overUI = isInsideContainer(pointer.clientX, pointer.clientY);
+
+                    if (pointer.overUI) {
+                        hoverIndex = -1;
+                        releaseGrab();
+                        return;
+                    }
+
+                    if (grabIndex < 0 && grabCooldown <= 0 && elapsed > 0.05) {
+                        const nearest = nearestVertexToPointer();
+                        hoverIndex = nearest;
+                        if (nearest >= 0) beginGrab(nearest);
+                    }
+                }
+
+                window.addEventListener('resize', resize, { passive: true });
+                window.addEventListener('pointermove', handlePointer, { passive: true });
+                window.addEventListener('pointerdown', handlePointer, { passive: true });
+                window.addEventListener('pointerup', (event) => {
+                    if (event.pointerType !== 'mouse') {
+                        pointer.active = false;
+                        releaseGrab();
+                    }
+                }, { passive: true });
+                window.addEventListener('pointercancel', () => {
+                    pointer.active = false;
+                    releaseGrab();
+                }, { passive: true });
+                document.documentElement.addEventListener('mouseleave', () => {
+                    pointer.active = false;
+                    hoverIndex = -1;
+                    releaseGrab();
+                });
+                window.addEventListener('blur', () => {
+                    pointer.active = false;
+                    hoverIndex = -1;
+                    releaseGrab();
+                });
+
+                if (container && typeof ResizeObserver !== 'undefined') {
+                    const containerObserver = new ResizeObserver(refreshContainerRect);
+                    containerObserver.observe(container);
+                }
+
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        cancelAnimationFrame(rafId);
+                        rafId = 0;
+                        releaseGrab();
+                    } else {
+                        start();
+                    }
+                });
+
+                pickShape(true);
+                resize();
+                start();
+            })();
 
         })();
     </script>
